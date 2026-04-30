@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { musicGenres } from '../data/music';
 import { healthConditions } from '../data/exercises';
+import { DEFAULT_PLAYLISTS, extractPlaylistId } from '../data/spotify';
 
 export default function ProfilePage({ user, onBack, onLogout, onUpdateUser, onRedoQuestionnaire, theme, toggleTheme }) {
   const profile = user.profile || {};
@@ -16,6 +17,27 @@ export default function ProfilePage({ user, onBack, onLogout, onUpdateUser, onRe
 
   // Exportar / Importar dados
   const [importMsg, setImportMsg]   = useState('');
+
+  // Spotify playlists
+  const [spotifyPlaylists, setSpotifyPlaylists] = useState(
+    () => JSON.parse(localStorage.getItem(`gym_spotify_${user.id}`) || '{}')
+  );
+  const [spotifySaved, setSpotifySaved] = useState(false);
+
+  const handleSpotifyChange = (genreId, value) => {
+    setSpotifyPlaylists(prev => ({ ...prev, [genreId]: value }));
+  };
+  const handleSaveSpotify = () => {
+    // Normaliza: extrai IDs de URLs completas
+    const normalized = {};
+    Object.entries(spotifyPlaylists).forEach(([k, v]) => {
+      if (v.trim()) normalized[k] = extractPlaylistId(v.trim());
+    });
+    localStorage.setItem(`gym_spotify_${user.id}`, JSON.stringify(normalized));
+    setSpotifyPlaylists(normalized);
+    setSpotifySaved(true);
+    setTimeout(() => setSpotifySaved(false), 2000);
+  };
 
   const handleRequestPermission = async () => {
     const result = await Notification.requestPermission();
@@ -289,6 +311,46 @@ export default function ProfilePage({ user, onBack, onLogout, onUpdateUser, onRe
               </button>
             </div>
           )}
+        </div>
+
+        {/* Spotify Playlists */}
+        <div className="profile-section">
+          <h4 className="section-title">🎵 Playlists do Spotify</h4>
+          <p className="profile-info-text">
+            Cole o link ou ID de uma playlist do Spotify para cada gênero. Deixe em branco para usar o padrão.
+          </p>
+          <div className="spotify-settings">
+            {(profile.musicGenres || []).map(gId => {
+              const g = musicGenres.find(x => x.id === gId);
+              if (!g) return null;
+              const placeholder = DEFAULT_PLAYLISTS[gId] || 'ID ou URL da playlist';
+              return (
+                <div key={gId} className="spotify-genre-row">
+                  <label className="spotify-genre-label" style={{ color: g.color }}>
+                    {g.emoji} {g.label}
+                  </label>
+                  <input
+                    className="spotify-playlist-input"
+                    type="text"
+                    placeholder={`Padrão: ${placeholder}`}
+                    value={spotifyPlaylists[gId] || ''}
+                    onChange={e => handleSpotifyChange(gId, e.target.value)}
+                  />
+                </div>
+              );
+            })}
+            {(profile.musicGenres || []).length === 0 && (
+              <p className="profile-tag-empty">Configure gêneros musicais no questionário primeiro.</p>
+            )}
+            {(profile.musicGenres || []).length > 0 && (
+              <button className="btn-primary notif-save-btn" onClick={handleSaveSpotify}>
+                {spotifySaved ? '✓ Salvo!' : '💾 Salvar Playlists'}
+              </button>
+            )}
+          </div>
+          <p className="spotify-hint">
+            💡 Abra o Spotify → clique numa playlist → compartilhar → copiar link
+          </p>
         </div>
 
         {/* Backup / Sincronização */}

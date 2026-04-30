@@ -820,6 +820,62 @@ body {
 .backup-import-label:hover { background: var(--bg2); border-color: var(--primary); }
 .import-msg { margin-top: 10px; font-size: 13px; color: var(--text2); }
 
+/* ─── Spotify Player (WorkoutSession) ─── */
+.spotify-section {
+  margin: 0 16px 12px;
+  border-radius: var(--radius);
+  border: 1px solid #1DB95444;
+  background: var(--card);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+.spotify-toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  background: transparent;
+  border: none;
+  color: var(--text);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: left;
+  transition: background 0.15s;
+}
+.spotify-toggle:hover { background: #1DB95411; }
+.spotify-logo {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+.spotify-arrow { margin-left: auto; font-size: 11px; color: #1DB954; }
+.spotify-embed-wrap {
+  animation: fadeIn 0.3s ease;
+}
+.spotify-iframe { display: block; border: none; }
+
+/* ─── Spotify Settings (ProfilePage) ─── */
+.spotify-settings { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+.spotify-genre-row { display: flex; flex-direction: column; gap: 4px; }
+.spotify-genre-label { font-size: 13px; font-weight: 700; }
+.spotify-playlist-input {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  padding: 8px 12px;
+  font-size: 13px;
+  outline: none;
+  width: 100%;
+  transition: border-color 0.15s;
+}
+.spotify-playlist-input:focus { border-color: #1DB954; }
+.spotify-hint { font-size: 12px; color: var(--text2); margin-top: 10px; font-style: italic; }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
+
 /* ─── Conquistas ─── */
 .achievements-page { min-height: 100vh; background: var(--bg); padding-bottom: 40px; }
 
