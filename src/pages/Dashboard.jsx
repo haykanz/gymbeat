@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import { generateWorkoutPlan } from '../data/exercises';
 import { musicGenres } from '../data/music';
 
-export default function Dashboard({ user, onStartWorkout, onCreatePlan, onLogout, onOpenProfile, onFreeWorkout, theme, toggleTheme }) {
+export default function Dashboard({ user, onStartWorkout, onCreatePlan, onLogout, onOpenProfile, onFreeWorkout, onOpenAchievements, theme, toggleTheme }) {
   const profile = user.profile || {};
   const [plans, setPlans] = useState(() => JSON.parse(localStorage.getItem(`gym_plans_${user.id}`) || '[]'));
   const [history, setHistory] = useState(() => JSON.parse(localStorage.getItem(`gym_history_${user.id}`) || '[]'));
@@ -157,6 +157,16 @@ export default function Dashboard({ user, onStartWorkout, onCreatePlan, onLogout
                 </button>
               </div>
             )}
+
+            {/* Conquistas */}
+            <button className="free-workout-btn achievements-btn" onClick={onOpenAchievements}>
+              <span className="fw-icon">🏅</span>
+              <div className="fw-text">
+                <span className="fw-title">Conquistas</span>
+                <span className="fw-sub">Veja seus badges e progresso</span>
+              </div>
+              <span className="fw-arrow">›</span>
+            </button>
 
             {/* Treino Livre */}
             <button className="free-workout-btn" onClick={onFreeWorkout}>

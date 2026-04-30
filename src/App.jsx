@@ -5,6 +5,7 @@ import Dashboard from './pages/Dashboard';
 import WorkoutSession from './pages/WorkoutSession';
 import ProfilePage from './pages/ProfilePage';
 import FreeWorkoutBuilder from './pages/FreeWorkoutBuilder';
+import AchievementsPage from './pages/AchievementsPage';
 import './App.css';
 
 export default function App() {
@@ -115,6 +116,7 @@ export default function App() {
             onLogout={handleLogout}
             onOpenProfile={() => setScreen('profile')}
             onFreeWorkout={() => setScreen('free-workout')}
+            onOpenAchievements={() => setScreen('achievements')}
             theme={theme}
             toggleTheme={toggleTheme}
           />
@@ -128,6 +130,16 @@ export default function App() {
             onLogout={handleLogout}
             onUpdateUser={handleUpdateUser}
             onRedoQuestionnaire={() => setScreen('questionnaire')}
+            theme={theme}
+            toggleTheme={toggleTheme}
+          />
+        </div>
+      )}
+      {screen === 'achievements' && user && (
+        <div className="screen-enter-right">
+          <AchievementsPage
+            user={user}
+            onBack={() => setScreen('dashboard')}
             theme={theme}
             toggleTheme={toggleTheme}
           />

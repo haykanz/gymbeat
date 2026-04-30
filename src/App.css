@@ -819,3 +819,70 @@ body {
 }
 .backup-import-label:hover { background: var(--bg2); border-color: var(--primary); }
 .import-msg { margin-top: 10px; font-size: 13px; color: var(--text2); }
+
+/* ─── Conquistas ─── */
+.achievements-page { min-height: 100vh; background: var(--bg); padding-bottom: 40px; }
+
+.ach-overview {
+  margin: 16px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  text-align: center;
+}
+.ach-overview-numbers { display: flex; align-items: baseline; justify-content: center; gap: 6px; margin-bottom: 12px; }
+.ach-count { font-size: 48px; font-weight: 900; color: var(--primary); line-height: 1; }
+.ach-total { font-size: 18px; color: var(--text2); }
+.ach-bar-wrap { background: var(--bg3); border-radius: 8px; height: 10px; overflow: hidden; margin-bottom: 8px; }
+.ach-bar-fill { height: 100%; background: linear-gradient(90deg, var(--primary), #EC4899); border-radius: 8px; transition: width 0.6s ease; }
+.ach-pct { font-size: 13px; color: var(--text2); }
+
+.ach-section { padding: 0 16px 8px; }
+.ach-section-title { font-size: 15px; font-weight: 700; margin-bottom: 12px; color: var(--text2); }
+
+.ach-grid { display: flex; flex-direction: column; gap: 10px; }
+
+.ach-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--card);
+  transition: transform 0.15s;
+}
+.ach-unlocked { box-shadow: 0 2px 12px rgba(108,58,255,0.15); }
+.ach-locked { opacity: 0.55; }
+
+.ach-emoji { font-size: 32px; flex-shrink: 0; }
+.ach-emoji-locked { filter: grayscale(1); }
+.ach-info { flex: 1; min-width: 0; }
+.ach-title { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
+.ach-desc  { font-size: 12px; color: var(--text2); margin-bottom: 4px; }
+.ach-rarity { font-size: 11px; font-weight: 700; }
+.ach-check { font-size: 20px; color: #10B981; flex-shrink: 0; }
+
+.ach-progress-wrap { display: flex; align-items: center; gap: 8px; margin-top: 6px; }
+.ach-progress-bar { flex: 1; background: var(--bg3); border-radius: 4px; height: 6px; overflow: hidden; }
+.ach-progress-fill { height: 100%; background: var(--primary); border-radius: 4px; transition: width 0.4s; }
+.ach-progress-label { font-size: 11px; color: var(--text2); flex-shrink: 0; }
+
+/* Botão de conquistas no dashboard */
+.achievements-btn { border-color: #F59E0B44; }
+.achievements-btn .fw-icon { background: #F59E0B22; }
+
+/* Conquistas na tela de conclusão */
+.comp-achievements {
+  background: linear-gradient(135deg, #F59E0B22, #6C3AFF22);
+  border: 1px solid #F59E0B55;
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 16px;
+}
+.comp-ach-title { font-size: 15px; font-weight: 800; color: #F59E0B; margin-bottom: 12px; text-align: center; }
+.comp-ach-item { display: flex; align-items: center; gap: 12px; padding: 8px 0; border-top: 1px solid #F59E0B22; }
+.comp-ach-emoji { font-size: 28px; }
+.comp-ach-name { font-size: 14px; font-weight: 700; }
+.comp-ach-desc { font-size: 12px; color: var(--text2); }

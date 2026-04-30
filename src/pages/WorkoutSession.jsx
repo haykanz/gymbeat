@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { matchTrackToExercise, getBpmMatchLabel, musicGenres, formatDuration } from '../data/music';
 import { exerciseLibrary, healthConditions } from '../data/exercises';
+import { checkNewAchievements } from '../data/achievements';
 
 const PHASES = { WARMUP: 'warmup', EXERCISE: 'exercise', REST: 'rest', SETREST: 'setrest', COMPLETE: 'complete' };
 
@@ -168,15 +169,38 @@ export default function WorkoutSession({ workout, userProfile, userId, onFinish 
 
   function saveHistory() {
     const history = JSON.parse(localStorage.getItem(`gym_history_${userId}`) || '[]');
-    history.unshift({
+    const entry = {
       date: new Date().toISOString(),
       workoutName: `${workout.day || 'Treino'} — ${workout.category || ''}`,
       duration: Math.round(totalElapsed / 60),
       calories: totalCalories,
       exercises: completedExs.length,
       logs: setLogs,
-    });
+      isFree: !!workout.isFree,
+    };
+    history.unshift(entry);
     localStorage.setItem(`gym_history_${userId}`, JSON.stringify(history));
+
+    // Verificar conquistas
+    const plans = JSON.parse(localStorage.getItem(`gym_plans_${userId}`) || '[]');
+    const prs   = JSON.parse(localStorage.getItem(`gym_prs_${userId}`)   || '{}');
+    // Calcular streak com o histórico atualizado
+    const dates = [...new Set(history.map(h => h.date))].sort().reverse();
+    let streak = 0;
+    for (let i = 0; i < dates.length; i++) {
+      const d = new Date(dates[i]);
+      const expected = new Date(Date.now() - i * 86400000);
+      if (d.toDateString() === expected.toDateString()) streak++;
+      else break;
+    }
+    const newAchs = checkNewAchievements(userId, { history, plans, prs, streak });
+    if (newAchs.length > 0) {
+      // Vibrar celebração e guardar para mostrar na tela de conclusão
+      try { navigator.vibrate?.([100, 80, 100, 80, 100, 80, 500]); } catch {}
+      sessionStorage.setItem('gym_new_achievements', JSON.stringify(newAchs));
+    } else {
+      sessionStorage.removeItem('gym_new_achievements');
+    }
   }
 
   // ── Finalizar exercício agora (skip) ───────────────────────────────────
@@ -758,6 +782,11 @@ function CompletionScreen({ workout, totalCalories, elapsed, completedExs, setLo
   const [copied, setCopied] = useState(false);
   const uniqueExs = [...new Set(completedExs.map(e => e.name))];
 
+  // Conquistas desbloqueadas nessa sessão
+  const newAchs = useMemo(() => {
+    try { return JSON.parse(sessionStorage.getItem('gym_new_achievements') || '[]'); } catch { return []; }
+  }, []);
+
   const handleShare = async () => {
     const lines = [
       `🏆 Treino concluído no GymBeat!`,
@@ -843,6 +872,22 @@ function CompletionScreen({ workout, totalCalories, elapsed, completedExs, setLo
         <div className="comp-exercises">
           {uniqueExs.map((name, i) => <span key={i} className="comp-ex-chip">✓ {name}</span>)}
         </div>
+
+        {/* Conquistas desbloqueadas */}
+        {newAchs.length > 0 && (
+          <div className="comp-achievements">
+            <p className="comp-ach-title">🏅 Conquista{newAchs.length > 1 ? 's' : ''} Desbloqueada{newAchs.length > 1 ? 's' : ''}!</p>
+            {newAchs.map(a => (
+              <div key={a.id} className="comp-ach-item">
+                <span className="comp-ach-emoji">{a.emoji}</span>
+                <div>
+                  <p className="comp-ach-name">{a.title}</p>
+                  <p className="comp-ach-desc">{a.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
 
         {/* Compartilhar */}
         <button className={`share-btn ${copied ? 'share-btn-copied' : ''}`} onClick={handleShare}>
