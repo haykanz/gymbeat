@@ -637,14 +637,34 @@ body {
 .picker-search-bar input::placeholder { color: var(--text3); }
 .search-clear { background: none; border: none; color: var(--text3); cursor: pointer; font-size: 14px; padding: 2px 4px; }
 
+/* Label dos filtros */
+.picker-filter-label { padding: 8px 16px 2px; font-size: 11px; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; }
+
 /* Chips de categoria */
-.picker-cats { display: flex; gap: 6px; padding: 10px 16px; overflow-x: auto; scrollbar-width: none; }
+.picker-cats { display: flex; gap: 6px; padding: 4px 16px 8px; overflow-x: auto; scrollbar-width: none; }
 .picker-cats::-webkit-scrollbar { display: none; }
-.cat-chip { flex-shrink: 0; padding: 6px 14px; border: 1px solid var(--border); border-radius: 20px; background: var(--bg3); color: var(--text2); font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+.cat-chip { flex-shrink: 0; padding: 6px 12px; border: 1px solid var(--border); border-radius: 20px; background: var(--bg3); color: var(--text2); font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
 .cat-chip.active { color: white; }
 
-/* Contagem */
-.picker-count { padding: 2px 16px 8px; font-size: 12px; color: var(--text3); }
+/* Chips de equipamento */
+.picker-eq-filters { display: flex; gap: 6px; padding: 4px 16px 8px; overflow-x: auto; scrollbar-width: none; flex-wrap: wrap; }
+.picker-eq-filters::-webkit-scrollbar { display: none; }
+.eq-chip { display: flex; align-items: center; gap: 5px; flex-shrink: 0; padding: 5px 10px; border: 1px solid var(--border); border-radius: 20px; background: var(--bg3); color: var(--text2); font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+.eq-chip.active { color: white; }
+.eq-chip.disabled { opacity: 0.35; cursor: not-allowed; }
+.eq-chip-count { font-size: 10px; background: rgba(255,255,255,0.2); border-radius: 10px; padding: 1px 5px; font-weight: 700; }
+.eq-chip:not(.active) .eq-chip-count { background: var(--bg2); color: var(--text3); }
+
+/* Badge de equipamento nos items */
+.picker-eq-badge { font-size: 11px; color: var(--text3); background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 1px 6px; white-space: nowrap; }
+.eq-badge-sm { font-size: 11px; color: var(--text3); }
+
+/* Contagem + reset */
+.picker-count-row { display: flex; align-items: center; justify-content: space-between; padding: 2px 16px 6px; }
+.picker-count { font-size: 12px; color: var(--text3); }
+.picker-reset { background: none; border: none; color: var(--danger); font-size: 12px; font-weight: 600; cursor: pointer; padding: 2px 0; }
+.picker-reset:hover { opacity: 0.8; }
+.picker-empty { text-align: center; padding: 40px 20px; color: var(--text3); font-size: 14px; line-height: 1.8; }
 
 /* Lista de exercícios */
 .picker-list { flex: 1; overflow-y: auto; padding: 0 12px 20px; display: flex; flex-direction: column; gap: 6px; }

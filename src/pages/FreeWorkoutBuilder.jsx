@@ -17,6 +17,33 @@ const CATEGORY_LABELS = {
   adapted:     { label: 'Adaptado',  emoji: '✅', color: '#10B981' },
 };
 
+// ── Filtros de equipamento ──────────────────────────────────────────────────
+export const EQUIPMENT_FILTERS = {
+  all:     { label: 'Todos',      emoji: '📋', color: '#6C3AFF', match: null },
+  free:    { label: 'Sem Peso',   emoji: '🏠', color: '#10B981', match: ['peso_corporal','banco','paralelas','barra_fixa'] },
+  dumbell: { label: 'Haltere',    emoji: '🏋️', color: '#F59E0B', match: ['haltere','kettlebell'] },
+  barbell: { label: 'Barra',      emoji: '🔩', color: '#8B5CF6', match: ['barra','smith'] },
+  machine: { label: 'Máquina',    emoji: '🖥️', color: '#3B82F6', match: ['maquina'] },
+  cable:   { label: 'Cabo',       emoji: '🔗', color: '#14B8A6', match: ['cabo'] },
+  other:   { label: 'Outros',     emoji: '🎀', color: '#EC4899', match: ['elastico','roda_abdominal','kettlebell','bola','faixa'] },
+};
+
+// Badge por equipamento individual
+export const EQ_BADGE = {
+  peso_corporal:  { label: 'Corpo Livre', emoji: '🏠' },
+  banco:          { label: 'Banco',       emoji: '🪑' },
+  paralelas:      { label: 'Paralelas',   emoji: '⊧'  },
+  barra_fixa:     { label: 'Barra Fixa',  emoji: '🔝' },
+  haltere:        { label: 'Haltere',     emoji: '🏋️' },
+  kettlebell:     { label: 'Kettlebell',  emoji: '⚫' },
+  barra:          { label: 'Barra',       emoji: '🔩' },
+  smith:          { label: 'Smith',       emoji: '🔩' },
+  maquina:        { label: 'Máquina',     emoji: '🖥️' },
+  cabo:           { label: 'Cabo',        emoji: '🔗' },
+  elastico:       { label: 'Elástico',    emoji: '🎀' },
+  roda_abdominal: { label: 'Roda Abd.',   emoji: '⚙️' },
+};
+
 export default function FreeWorkoutBuilder({ userProfile, userId, onStart, onBack }) {
   const [workoutName, setWorkoutName] = useState('Treino Livre');
   const [exercises, setExercises]     = useState([]);
@@ -132,7 +159,8 @@ export default function FreeWorkoutBuilder({ userProfile, userId, onStart, onBac
         ) : (
           <div className="fw-exercise-list">
             {exercises.map((ex, i) => {
-              const catInfo = CATEGORY_LABELS[ex.category] || { color: '#6C3AFF', emoji: '•' };
+              const catInfo = CATEGORY_LABELS[ex.category] || { color: '#6C3AFF', emoji: '•', label: ex.category };
+              const eqInfo  = EQ_BADGE[ex.equipment] || null;
               return (
                 <div key={i} className="fw-ex-item">
                   <div className="fw-ex-order">
@@ -145,8 +173,8 @@ export default function FreeWorkoutBuilder({ userProfile, userId, onStart, onBac
                     <p className="fw-ex-name">{ex.name}</p>
                     <div className="fw-ex-meta">
                       <span style={{ color: catInfo.color }}>{catInfo.emoji} {catInfo.label}</span>
+                      {eqInfo && <span className="eq-badge-sm">{eqInfo.emoji} {eqInfo.label}</span>}
                       <span>⏱ {ex.duration}s</span>
-                      <span>🎵 {ex.bpmMin}–{ex.bpmMax} BPM</span>
                     </div>
                   </div>
                   <button className="fw-remove-btn" onClick={() => handleRemove(i)}>✕</button>
@@ -174,10 +202,11 @@ export default function FreeWorkoutBuilder({ userProfile, userId, onStart, onBac
   );
 }
 
-// ── Seletor de exercícios (reutiliza lógica do WorkoutSession) ─────────────
+// ── Seletor de exercícios ──────────────────────────────────────────────────
 function ExercisePicker({ restricted, alreadyAdded, onSelect, onClose, genreInfo }) {
   const [search,    setSearch]    = useState('');
   const [catFilter, setCatFilter] = useState('all');
+  const [eqFilter,  setEqFilter]  = useState('all');
 
   const allExercises = useMemo(() => {
     const list = [];
@@ -189,12 +218,26 @@ function ExercisePicker({ restricted, alreadyAdded, onSelect, onClose, genreInfo
 
   const filtered = useMemo(() => allExercises.filter(ex => {
     const matchCat    = catFilter === 'all' || ex.category === catFilter;
+    const eqConf      = EQUIPMENT_FILTERS[eqFilter];
+    const matchEq     = eqFilter === 'all' || !eqConf.match || eqConf.match.includes(ex.equipment);
     const matchSearch = !search || ex.name.toLowerCase().includes(search.toLowerCase()) ||
-      (ex.muscles || []).some(m => m.toLowerCase().includes(search.toLowerCase()));
-    return matchCat && matchSearch;
-  }), [allExercises, catFilter, search]);
+      (ex.muscles || []).some(m => m.toLowerCase().includes(search.toLowerCase())) ||
+      (EQ_BADGE[ex.equipment]?.label || '').toLowerCase().includes(search.toLowerCase());
+    return matchCat && matchEq && matchSearch;
+  }), [allExercises, catFilter, eqFilter, search]);
 
-  const categories = ['all', 'abs', 'chest', 'back', 'shoulders', 'arms', 'legs', 'glutes', 'cardio', 'strength', 'hiit', 'flexibility', 'adapted'];
+  const categories  = ['all', 'abs', 'chest', 'back', 'shoulders', 'arms', 'legs', 'glutes', 'cardio', 'strength', 'hiit', 'flexibility', 'adapted'];
+  const equipments  = Object.keys(EQUIPMENT_FILTERS);
+
+  // Conta ativos por filtro de equipamento para mostrar disponibilidade
+  const eqCounts = useMemo(() => {
+    const base = allExercises.filter(ex => catFilter === 'all' || ex.category === catFilter);
+    return Object.fromEntries(equipments.map(key => {
+      const conf = EQUIPMENT_FILTERS[key];
+      const count = conf.match ? base.filter(ex => conf.match.includes(ex.equipment)).length : base.length;
+      return [key, count];
+    }));
+  }, [allExercises, catFilter]);
 
   return (
     <div className="picker-overlay">
@@ -206,12 +249,17 @@ function ExercisePicker({ restricted, alreadyAdded, onSelect, onClose, genreInfo
           </div>
           <button className="picker-close" onClick={onClose}>✕</button>
         </div>
+
+        {/* Busca */}
         <div className="picker-search-bar">
           <span className="search-icon">🔍</span>
-          <input type="text" placeholder="Buscar por nome ou músculo..."
+          <input type="text" placeholder="Nome, músculo ou equipamento..."
             value={search} onChange={e => setSearch(e.target.value)} autoFocus />
           {search && <button className="search-clear" onClick={() => setSearch('')}>✕</button>}
         </div>
+
+        {/* Filtro: Categoria */}
+        <p className="picker-filter-label">Grupo muscular</p>
         <div className="picker-cats">
           {categories.map(cat => {
             const info = cat === 'all'
@@ -226,10 +274,48 @@ function ExercisePicker({ restricted, alreadyAdded, onSelect, onClose, genreInfo
             );
           })}
         </div>
-        <p className="picker-count">{filtered.length} exercício{filtered.length !== 1 ? 's' : ''}</p>
+
+        {/* Filtro: Equipamento */}
+        <p className="picker-filter-label">Equipamento</p>
+        <div className="picker-eq-filters">
+          {equipments.map(key => {
+            const info  = EQUIPMENT_FILTERS[key];
+            const count = eqCounts[key] || 0;
+            const active = eqFilter === key;
+            return (
+              <button key={key}
+                className={`eq-chip ${active ? 'active' : ''} ${count === 0 ? 'disabled' : ''}`}
+                style={active ? { backgroundColor: info.color, borderColor: info.color } : {}}
+                onClick={() => count > 0 && setEqFilter(key)}
+                disabled={count === 0}
+              >
+                <span>{info.emoji} {info.label}</span>
+                {count > 0 && <span className="eq-chip-count">{count}</span>}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Contador + reset */}
+        <div className="picker-count-row">
+          <p className="picker-count">{filtered.length} exercício{filtered.length !== 1 ? 's' : ''}</p>
+          {(catFilter !== 'all' || eqFilter !== 'all' || search) && (
+            <button className="picker-reset" onClick={() => { setCatFilter('all'); setEqFilter('all'); setSearch(''); }}>
+              ✕ Limpar filtros
+            </button>
+          )}
+        </div>
+
+        {/* Lista */}
         <div className="picker-list">
-          {filtered.map(ex => {
-            const catInfo = CATEGORY_LABELS[ex.category] || { color: '#6C3AFF', emoji: '•' };
+          {filtered.length === 0 ? (
+            <div className="picker-empty">
+              <p>😅 Nenhum exercício encontrado</p>
+              <p>Tente mudar os filtros</p>
+            </div>
+          ) : filtered.map(ex => {
+            const catInfo = CATEGORY_LABELS[ex.category] || { color: '#6C3AFF', emoji: '•', label: ex.category };
+            const eqInfo  = EQ_BADGE[ex.equipment] || null;
             const added   = alreadyAdded.includes(ex.id);
             return (
               <button key={ex.id}
@@ -244,6 +330,9 @@ function ExercisePicker({ restricted, alreadyAdded, onSelect, onClose, genreInfo
                   </div>
                   <div className="picker-item-meta">
                     <span className="picker-cat-badge" style={{ color: catInfo.color }}>{catInfo.emoji} {catInfo.label}</span>
+                    {eqInfo && (
+                      <span className="picker-eq-badge">{eqInfo.emoji} {eqInfo.label}</span>
+                    )}
                     <span className="picker-bpm">🎵 {ex.bpmMin}–{ex.bpmMax} BPM</span>
                     <span className="picker-duration">⏱ {ex.duration}s</span>
                   </div>
