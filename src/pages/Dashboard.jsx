@@ -2,6 +2,21 @@ import { useState, useMemo } from 'react';
 import { generateWorkoutPlan } from '../data/exercises';
 import { musicGenres } from '../data/music';
 
+const CAT_PT = {
+  abs:         'Abdômen',
+  chest:       'Peito',
+  back:        'Costas',
+  shoulders:   'Ombros',
+  arms:        'Braços',
+  legs:        'Pernas',
+  glutes:      'Glúteos',
+  cardio:      'Cardio',
+  strength:    'Força',
+  hiit:        'HIIT',
+  flexibility:  'Flexibilidade',
+  adapted:     'Adaptado',
+};
+
 export default function Dashboard({ user, onStartWorkout, onCreatePlan, onLogout, onOpenProfile, onFreeWorkout, onOpenAchievements, theme, toggleTheme }) {
   const profile = user.profile || {};
   const [plans, setPlans] = useState(() => JSON.parse(localStorage.getItem(`gym_plans_${user.id}`) || '[]'));
@@ -104,7 +119,7 @@ export default function Dashboard({ user, onStartWorkout, onCreatePlan, onLogout
                 <div className="today-header">
                   <div>
                     <p className="today-label">TREINO DE HOJE</p>
-                    <h3>{todayWorkout.day} — {todayWorkout.category?.toUpperCase()}</h3>
+                    <h3>{todayWorkout.day} — {CAT_PT[todayWorkout.category] || todayWorkout.category?.toUpperCase()}</h3>
                     <p>{todayWorkout.exercises?.length} exercícios · {todayWorkout.sets} séries · ~{Math.round(todayWorkout.totalTime / 60)} min</p>
                   </div>
                   <span className="today-emoji">🏋️</span>
@@ -136,7 +151,7 @@ export default function Dashboard({ user, onStartWorkout, onCreatePlan, onLogout
                     <p className="next-label">PRÓXIMO TREINO</p>
                     <div className="next-workout-info">
                       <span className="next-day">{nextWorkout.day}</span>
-                      <span className="next-cat">— {nextWorkout.category?.toUpperCase()}</span>
+                      <span className="next-cat">— {CAT_PT[nextWorkout.category] || nextWorkout.category?.toUpperCase()}</span>
                     </div>
                     <div className="exercise-preview" style={{ marginTop: '8px' }}>
                       {nextWorkout.exercises?.slice(0, 3).map((ex, i) => (
@@ -464,7 +479,7 @@ function PlanCard({ plan, onStart }) {
           {plan.days?.map((day, i) => (
             <div key={i} className="plan-day">
               <div className="plan-day-info">
-                <strong>{day.day}</strong>
+                <strong>{day.day} — {CAT_PT[day.category] || day.category}</strong>
                 <span>{day.exercises?.length} exerc. · {day.sets} séries · ~{Math.round(day.totalTime / 60)} min</span>
               </div>
               <button className="btn-sm-primary" onClick={() => onStart(day)}>

@@ -7,11 +7,18 @@ import { getSpotifyEmbedUrl } from '../data/spotify';
 const PHASES = { WARMUP: 'warmup', EXERCISE: 'exercise', REST: 'rest', SETREST: 'setrest', COMPLETE: 'complete' };
 
 const CATEGORY_LABELS = {
-  cardio:     { label: 'Cardio',   emoji: '🏃', color: '#F59E0B' },
-  strength:   { label: 'Força',    emoji: '💪', color: '#8B5CF6' },
-  hiit:       { label: 'HIIT',     emoji: '🔥', color: '#EF4444' },
-  flexibility:{ label: 'Flex.',    emoji: '🧘', color: '#06B6D4' },
-  adapted:    { label: 'Adaptado', emoji: '✅', color: '#10B981' },
+  abs:         { label: 'Abdômen',   emoji: '🎯', color: '#F97316' },
+  chest:       { label: 'Peito',     emoji: '🫁', color: '#EC4899' },
+  back:        { label: 'Costas',    emoji: '🔙', color: '#14B8A6' },
+  shoulders:   { label: 'Ombros',    emoji: '🏔️', color: '#6366F1' },
+  arms:        { label: 'Braços',    emoji: '💪', color: '#A855F7' },
+  legs:        { label: 'Pernas',    emoji: '🦵', color: '#3B82F6' },
+  glutes:      { label: 'Glúteos',   emoji: '🍑', color: '#F43F5E' },
+  cardio:      { label: 'Cardio',    emoji: '🏃', color: '#F59E0B' },
+  strength:    { label: 'Força',     emoji: '🏋️', color: '#8B5CF6' },
+  hiit:        { label: 'HIIT',      emoji: '🔥', color: '#EF4444' },
+  flexibility: { label: 'Flex.',     emoji: '🧘', color: '#06B6D4' },
+  adapted:     { label: 'Adaptado',  emoji: '✅', color: '#10B981' },
 };
 
 // ── Vibração (Vibration API) ───────────────────────────────────────────────
@@ -663,7 +670,7 @@ function ExercisePicker({ currentEx, restricted, onSelect, onClose, genreInfo })
     });
   }, [allExercises, catFilter, search]);
 
-  const categories = ['all', 'cardio', 'strength', 'hiit', 'flexibility', 'adapted'];
+  const categories = ['all', 'abs', 'chest', 'back', 'shoulders', 'arms', 'legs', 'glutes', 'cardio', 'strength', 'hiit', 'flexibility', 'adapted'];
 
   return (
     <div className="picker-overlay">
