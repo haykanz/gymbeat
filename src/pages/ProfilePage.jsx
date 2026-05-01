@@ -24,9 +24,32 @@ export default function ProfilePage({ user, onBack, onLogout, onUpdateUser, onRe
   );
   const [spotifySaved, setSpotifySaved] = useState(false);
 
+  // Peso corporal
+  const [weightLog,   setWeightLog]   = useState(() => JSON.parse(localStorage.getItem(`gym_weight_${user.id}`) || '[]'));
+  const [weightInput, setWeightInput] = useState('');
+  const [weightSaved, setWeightSaved] = useState(false);
+
   const handleSpotifyChange = (genreId, value) => {
     setSpotifyPlaylists(prev => ({ ...prev, [genreId]: value }));
   };
+  const handleLogWeight = () => {
+    const val = parseFloat(weightInput.replace(',', '.'));
+    if (!val || val < 20 || val > 400) return;
+    const entry = { date: new Date().toISOString(), weight: val };
+    const updated = [entry, ...weightLog];
+    localStorage.setItem(`gym_weight_${user.id}`, JSON.stringify(updated));
+    setWeightLog(updated);
+    setWeightInput('');
+    setWeightSaved(true);
+    setTimeout(() => setWeightSaved(false), 2000);
+  };
+
+  const handleDeleteWeight = (idx) => {
+    const updated = weightLog.filter((_, i) => i !== idx);
+    localStorage.setItem(`gym_weight_${user.id}`, JSON.stringify(updated));
+    setWeightLog(updated);
+  };
+
   const handleSaveSpotify = () => {
     // Normaliza: extrai IDs de URLs completas
     const normalized = {};
@@ -353,6 +376,55 @@ export default function ProfilePage({ user, onBack, onLogout, onUpdateUser, onRe
           </p>
         </div>
 
+        {/* Peso Corporal */}
+        <div className="profile-section">
+          <h4 className="section-title">⚖️ Peso Corporal</h4>
+          <div className="weight-input-row">
+            <input
+              className="weight-input"
+              type="number"
+              min="20" max="400" step="0.1"
+              placeholder="Ex: 75.5"
+              value={weightInput}
+              onChange={e => setWeightInput(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && handleLogWeight()}
+            />
+            <span className="weight-unit">kg</span>
+            <button className="btn-primary weight-log-btn" onClick={handleLogWeight}>
+              {weightSaved ? '✓' : '+ Registrar'}
+            </button>
+          </div>
+
+          {weightLog.length >= 2 && (
+            <WeightChart log={weightLog.slice().reverse()} />
+          )}
+
+          {weightLog.length > 0 && (
+            <div className="weight-history">
+              <p className="weight-history-title">Últimos registros</p>
+              {weightLog.slice(0, 8).map((entry, i) => (
+                <div key={i} className="weight-entry">
+                  <span className="weight-entry-val">{entry.weight} kg</span>
+                  <span className="weight-entry-date">
+                    {new Date(entry.date).toLocaleDateString('pt-BR', { day:'2-digit', month:'short' })}
+                  </span>
+                  {i === 0 && weightLog.length > 1 && (
+                    <span className={`weight-entry-diff ${entry.weight - weightLog[1].weight < 0 ? 'down' : 'up'}`}>
+                      {entry.weight - weightLog[1].weight > 0 ? '+' : ''}
+                      {(entry.weight - weightLog[1].weight).toFixed(1)} kg
+                    </span>
+                  )}
+                  <button className="weight-delete-btn" onClick={() => handleDeleteWeight(i)}>✕</button>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {weightLog.length === 0 && (
+            <p className="profile-empty">Nenhum registro ainda — registre seu peso para acompanhar a evolução!</p>
+          )}
+        </div>
+
         {/* Backup / Sincronização */}
         <div className="profile-section">
           <h4 className="section-title">☁️ Backup de Dados</h4>
@@ -372,7 +444,7 @@ export default function ProfilePage({ user, onBack, onLogout, onUpdateUser, onRe
       </div>
 
       {/* Ações */}
-      <div className="profile-actions">
+      <div className="profile-actions" id="profile-actions-bottom">
         <button className="profile-action-btn" onClick={onRedoQuestionnaire}>
           <span>🔄</span>
           <span>Refazer Questionário</span>
@@ -381,6 +453,56 @@ export default function ProfilePage({ user, onBack, onLogout, onUpdateUser, onRe
           <span>🚪</span>
           <span>Sair da Conta</span>
         </button>
+      </div>
+    </div>
+  );
+}
+
+// ── Gráfico de peso corporal ──────────────────────────────────────────────
+function WeightChart({ log }) {
+  const n    = log.length;
+  const W    = 300, H = 80, PAD = 12;
+  const vals = log.map(e => e.weight);
+  const minW = Math.min(...vals);
+  const maxW = Math.max(...vals);
+  const range = maxW - minW || 1;
+
+  const pts = vals.map((v, i) => ({
+    x: PAD + (n > 1 ? (i / (n - 1)) : 0.5) * (W - PAD * 2),
+    y: H - PAD - ((v - minW) / range) * (H - PAD * 2),
+    weight: v,
+  }));
+
+  const polyline   = pts.map(p => `${p.x},${p.y}`).join(' ');
+  const areaPoints = `${PAD},${H - PAD} ${polyline} ${pts[n-1].x},${H - PAD}`;
+  const isDown     = vals[n - 1] <= vals[0];
+
+  return (
+    <div className="weight-chart-wrap">
+      <svg viewBox={`0 0 ${W} ${H}`} className="weight-svg" aria-hidden="true">
+        <defs>
+          <linearGradient id="weight-grad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor={isDown ? '#10B981' : '#EF4444'} stopOpacity="0.35" />
+            <stop offset="100%" stopColor={isDown ? '#10B981' : '#EF4444'} stopOpacity="0" />
+          </linearGradient>
+        </defs>
+        <line x1={PAD} y1={H - PAD} x2={W - PAD} y2={H - PAD} stroke="var(--border)" strokeWidth="1" />
+        <polygon points={areaPoints} fill="url(#weight-grad)" />
+        <polyline points={polyline} fill="none" stroke={isDown ? '#10B981' : '#EF4444'}
+          strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+        {pts.map((p, i) => (
+          <circle key={i} cx={p.x} cy={p.y} r="3.5" fill={isDown ? '#10B981' : '#EF4444'}
+            stroke="var(--card)" strokeWidth="1.5" />
+        ))}
+        <text x={pts[0].x} y={H} fontSize="8" fill="var(--text2)" textAnchor="middle">{vals[0]}kg</text>
+        <text x={pts[n-1].x} y={H} fontSize="8" fill={isDown ? '#10B981' : '#EF4444'}
+          textAnchor="middle" fontWeight="bold">{vals[n-1]}kg</text>
+      </svg>
+      <div className="weight-chart-summary">
+        <span>📊 {n} registros</span>
+        <span style={{ color: isDown ? '#10B981' : '#EF4444', fontWeight: 700 }}>
+          {vals[n-1] - vals[0] > 0 ? '+' : ''}{(vals[n-1] - vals[0]).toFixed(1)} kg total
+        </span>
       </div>
     </div>
   );

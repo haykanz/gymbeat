@@ -3,6 +3,7 @@ import { matchTrackToExercise, getBpmMatchLabel, musicGenres, formatDuration } f
 import { exerciseLibrary, healthConditions } from '../data/exercises';
 import { checkNewAchievements } from '../data/achievements';
 import { getSpotifyEmbedUrl } from '../data/spotify';
+import ExerciseDetailModal from '../components/ExerciseDetailModal';
 
 const PHASES = { WARMUP: 'warmup', EXERCISE: 'exercise', REST: 'rest', SETREST: 'setrest', COMPLETE: 'complete' };
 
@@ -187,6 +188,7 @@ export default function WorkoutSession({ workout, userProfile, userId, onFinish 
     const entry = {
       date: new Date().toISOString(),
       workoutName: `${workout.day || 'Treino'} — ${workout.category || ''}`,
+      category: workout.category || '',
       duration: Math.round(totalElapsed / 60),
       calories: totalCalories,
       exercises: completedExs.length,
@@ -679,6 +681,7 @@ function ExercisePicker({ currentEx, restricted, onSelect, onClose, genreInfo })
   const [search,    setSearch]    = useState('');
   const [catFilter, setCatFilter] = useState('all');
   const [eqFilter,  setEqFilter]  = useState('all');
+  const [detailEx,  setDetailEx]  = useState(null);
 
   const allExercises = useMemo(() => {
     const list = [];
@@ -713,6 +716,15 @@ function ExercisePicker({ currentEx, restricted, onSelect, onClose, genreInfo })
   }, [allExercises, catFilter]);
 
   return (
+    <>
+    {detailEx && (
+      <ExerciseDetailModal
+        ex={detailEx}
+        onClose={() => setDetailEx(null)}
+        onAction={detailEx.id !== currentEx?.id ? (ex) => { onSelect(ex); onClose(); } : null}
+        actionLabel="↔ Usar este exercício"
+      />
+    )}
     <div className="picker-overlay">
       <div className="picker-sheet">
         <div className="picker-header">
@@ -790,12 +802,9 @@ function ExercisePicker({ currentEx, restricted, onSelect, onClose, genreInfo })
               const eqInfo    = EQ_BADGE[ex.equipment] || null;
               const isCurrent = ex.id === currentEx?.id;
               return (
-                <button key={ex.id}
-                  className={`picker-item ${isCurrent ? 'picker-item-current' : ''}`}
-                  onClick={() => !isCurrent && onSelect(ex)} disabled={isCurrent}
-                >
+                <div key={ex.id} className={`picker-item ${isCurrent ? 'picker-item-current' : ''}`}>
                   <span className="picker-item-emoji">{ex.gif}</span>
-                  <div className="picker-item-info">
+                  <div className="picker-item-info" onClick={() => setDetailEx(ex)} style={{ cursor: 'pointer', flex: 1 }}>
                     <div className="picker-item-name-row">
                       <span className="picker-item-name">{ex.name}</span>
                       {isCurrent && <span className="current-tag">Atual</span>}
@@ -805,19 +814,26 @@ function ExercisePicker({ currentEx, restricted, onSelect, onClose, genreInfo })
                       <span className="picker-cat-badge" style={{ color: catInfo.color }}>{catInfo.emoji} {catInfo.label}</span>
                       {eqInfo && <span className="picker-eq-badge">{eqInfo.emoji} {eqInfo.label}</span>}
                       <span className="picker-bpm">🎵 {ex.bpmMin}–{ex.bpmMax} BPM</span>
-                      <span className="picker-duration">⏱ {ex.duration}s</span>
                     </div>
                     <div className="picker-muscles">
                       {(ex.muscles || []).slice(0, 3).map((m, i) => <span key={i} className="muscle-tag-sm">{m}</span>)}
                     </div>
                   </div>
-                </button>
+                  <div className="picker-item-actions">
+                    <button className="picker-info-btn" onClick={() => setDetailEx(ex)} title="Ver detalhes">ℹ️</button>
+                    {!isCurrent && (
+                      <button className="picker-swap-btn" onClick={() => { onSelect(ex); onClose(); }}
+                        title="Usar este exercício">↔</button>
+                    )}
+                  </div>
+                </div>
               );
             })
           )}
         </div>
       </div>
     </div>
+    </>
   );
 }
 

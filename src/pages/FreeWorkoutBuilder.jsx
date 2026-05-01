@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { exerciseLibrary, healthConditions } from '../data/exercises';
 import { musicGenres } from '../data/music';
+import ExerciseDetailModal from '../components/ExerciseDetailModal';
 
 const CATEGORY_LABELS = {
   abs:         { label: 'Abdômen',   emoji: '🎯', color: '#F97316' },
@@ -207,6 +208,7 @@ function ExercisePicker({ restricted, alreadyAdded, onSelect, onClose, genreInfo
   const [search,    setSearch]    = useState('');
   const [catFilter, setCatFilter] = useState('all');
   const [eqFilter,  setEqFilter]  = useState('all');
+  const [detailEx,  setDetailEx]  = useState(null);
 
   const allExercises = useMemo(() => {
     const list = [];
@@ -240,6 +242,15 @@ function ExercisePicker({ restricted, alreadyAdded, onSelect, onClose, genreInfo
   }, [allExercises, catFilter]);
 
   return (
+    <>
+    {detailEx && (
+      <ExerciseDetailModal
+        ex={detailEx}
+        onClose={() => setDetailEx(null)}
+        onAction={alreadyAdded.includes(detailEx.id) ? null : onSelect}
+        actionLabel="+ Adicionar ao treino"
+      />
+    )}
     <div className="picker-overlay">
       <div className="picker-sheet">
         <div className="picker-header">
@@ -318,12 +329,9 @@ function ExercisePicker({ restricted, alreadyAdded, onSelect, onClose, genreInfo
             const eqInfo  = EQ_BADGE[ex.equipment] || null;
             const added   = alreadyAdded.includes(ex.id);
             return (
-              <button key={ex.id}
-                className={`picker-item ${added ? 'picker-item-added' : ''}`}
-                onClick={() => onSelect(ex)}
-              >
+              <div key={ex.id} className={`picker-item ${added ? 'picker-item-added' : ''}`}>
                 <span className="picker-item-emoji">{ex.gif}</span>
-                <div className="picker-item-info">
+                <div className="picker-item-info" onClick={() => setDetailEx(ex)} style={{ cursor: 'pointer', flex: 1 }}>
                   <div className="picker-item-name-row">
                     <span className="picker-item-name">{ex.name}</span>
                     {added && <span className="added-tag">✓ Adicionado</span>}
@@ -334,7 +342,6 @@ function ExercisePicker({ restricted, alreadyAdded, onSelect, onClose, genreInfo
                       <span className="picker-eq-badge">{eqInfo.emoji} {eqInfo.label}</span>
                     )}
                     <span className="picker-bpm">🎵 {ex.bpmMin}–{ex.bpmMax} BPM</span>
-                    <span className="picker-duration">⏱ {ex.duration}s</span>
                   </div>
                   <div className="picker-muscles">
                     {(ex.muscles || []).slice(0, 3).map((m, i) => (
@@ -342,14 +349,19 @@ function ExercisePicker({ restricted, alreadyAdded, onSelect, onClose, genreInfo
                     ))}
                   </div>
                 </div>
-                {!added && (
-                  <span className="picker-add-icon" style={{ color: genreInfo.color }}>+</span>
-                )}
-              </button>
+                <div className="picker-item-actions">
+                  <button className="picker-info-btn" onClick={() => setDetailEx(ex)} title="Ver detalhes">ℹ️</button>
+                  {!added && (
+                    <button className="picker-add-btn" style={{ color: genreInfo.color, borderColor: genreInfo.color }}
+                      onClick={() => onSelect(ex)}>+</button>
+                  )}
+                </div>
+              </div>
             );
           })}
         </div>
       </div>
     </div>
+    </>
   );
 }

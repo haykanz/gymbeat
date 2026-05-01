@@ -357,10 +357,32 @@ function StatCard({ icon, value, label, color }) {
   );
 }
 
+const CAT_INFO = {
+  abs:         { label: 'Abdômen',   emoji: '🎯', color: '#F97316' },
+  chest:       { label: 'Peito',     emoji: '🫁', color: '#EC4899' },
+  back:        { label: 'Costas',    emoji: '🔙', color: '#14B8A6' },
+  shoulders:   { label: 'Ombros',    emoji: '🏔️', color: '#6366F1' },
+  arms:        { label: 'Braços',    emoji: '💪', color: '#A855F7' },
+  legs:        { label: 'Pernas',    emoji: '🦵', color: '#3B82F6' },
+  glutes:      { label: 'Glúteos',   emoji: '🍑', color: '#F43F5E' },
+  cardio:      { label: 'Cardio',    emoji: '🏃', color: '#F59E0B' },
+  strength:    { label: 'Força',     emoji: '🏋️', color: '#8B5CF6' },
+  hiit:        { label: 'HIIT',      emoji: '🔥', color: '#EF4444' },
+  flexibility: { label: 'Flex.',     emoji: '🧘', color: '#06B6D4' },
+  adapted:     { label: 'Adaptado',  emoji: '✅', color: '#10B981' },
+};
+
 // ── Evolução de Cargas ────────────────────────────────────────────────────
 function EvolutionTab({ userId }) {
+  const [activeView, setActiveView] = useState('loads'); // 'loads' | 'muscles'
+  const [period, setPeriod]         = useState(30);      // dias
+
+  const history = useMemo(() =>
+    JSON.parse(localStorage.getItem(`gym_history_${userId}`) || '[]'),
+  [userId]);
+
+  // ── Cargas por exercício ────────────────────────────────────────────────
   const exercises = useMemo(() => {
-    const history = JSON.parse(localStorage.getItem(`gym_history_${userId}`) || '[]');
     const byEx = {};
     history.forEach(h => {
       (h.logs || []).forEach(log => {
@@ -378,25 +400,123 @@ function EvolutionTab({ userId }) {
         lastDate: logs[logs.length - 1]?.date,
       }))
       .sort((a, b) => new Date(b.lastDate) - new Date(a.lastDate));
-  }, [userId]);
+  }, [history]);
 
-  if (exercises.length === 0) {
-    return (
-      <div className="empty-state">
-        <p className="empty-icon">📈</p>
-        <p>Nenhum registro de carga ainda</p>
-        <p className="empty-sub">Registre peso e reps durante os treinos para ver sua evolução!</p>
-      </div>
-    );
-  }
+  // ── Frequência por grupo muscular ───────────────────────────────────────
+  const muscleStats = useMemo(() => {
+    const cutoff = new Date(Date.now() - period * 86400000);
+    const recent = history.filter(h => new Date(h.date) >= cutoff);
+    const counts = {};
+    recent.forEach(h => {
+      const cat = h.category;
+      if (cat && CAT_INFO[cat]) {
+        counts[cat] = (counts[cat] || 0) + 1;
+      }
+    });
+    const total = recent.length || 1;
+    return Object.entries(counts)
+      .map(([cat, count]) => ({ cat, count, pct: Math.round((count / total) * 100), ...CAT_INFO[cat] }))
+      .sort((a, b) => b.count - a.count);
+  }, [history, period]);
 
   return (
     <div className="evolution-tab">
-      <h3>📈 Evolução de Cargas</h3>
-      <p className="evo-subtitle">{exercises.length} exercício{exercises.length !== 1 ? 's' : ''} com histórico de carga</p>
-      <div className="evo-list">
-        {exercises.map(ex => <ExerciseProgressCard key={ex.name} ex={ex} />)}
+      {/* Toggle cargas / músculos */}
+      <div className="evo-view-toggle">
+        <button className={`evo-toggle-btn ${activeView === 'loads' ? 'active' : ''}`}
+          onClick={() => setActiveView('loads')}>📈 Cargas</button>
+        <button className={`evo-toggle-btn ${activeView === 'muscles' ? 'active' : ''}`}
+          onClick={() => setActiveView('muscles')}>💪 Músculos</button>
       </div>
+
+      {activeView === 'loads' ? (
+        <>
+          <p className="evo-subtitle">{exercises.length} exercício{exercises.length !== 1 ? 's' : ''} com histórico de carga</p>
+          {exercises.length === 0 ? (
+            <div className="empty-state" style={{ marginTop: 32 }}>
+              <p className="empty-icon">📈</p>
+              <p>Nenhum registro de carga ainda</p>
+              <p className="empty-sub">Registre peso e reps durante os treinos para ver sua evolução!</p>
+            </div>
+          ) : (
+            <div className="evo-list">
+              {exercises.map(ex => <ExerciseProgressCard key={ex.name} ex={ex} />)}
+            </div>
+          )}
+        </>
+      ) : (
+        <MuscleStatsView stats={muscleStats} period={period} onPeriodChange={setPeriod} total={history.length} />
+      )}
+    </div>
+  );
+}
+
+function MuscleStatsView({ stats, period, onPeriodChange, total }) {
+  const maxCount = stats[0]?.count || 1;
+
+  return (
+    <div className="muscle-stats">
+      {/* Seletor de período */}
+      <div className="muscle-period-row">
+        <span className="muscle-period-label">Período:</span>
+        {[7, 30, 90].map(d => (
+          <button key={d}
+            className={`muscle-period-btn ${period === d ? 'active' : ''}`}
+            onClick={() => onPeriodChange(d)}>
+            {d}d
+          </button>
+        ))}
+      </div>
+
+      {stats.length === 0 ? (
+        <div className="empty-state" style={{ marginTop: 32 }}>
+          <p className="empty-icon">💪</p>
+          <p>Nenhum treino nos últimos {period} dias</p>
+          <p className="empty-sub">Complete treinos para ver quais músculos você está focando!</p>
+        </div>
+      ) : (
+        <>
+          <p className="evo-subtitle">{stats.length} grupos musculares treinados</p>
+          <div className="muscle-bars">
+            {stats.map(s => (
+              <div key={s.cat} className="muscle-bar-row">
+                <div className="muscle-bar-label">
+                  <span className="muscle-bar-emoji">{s.emoji}</span>
+                  <span className="muscle-bar-name">{s.label}</span>
+                </div>
+                <div className="muscle-bar-track">
+                  <div className="muscle-bar-fill"
+                    style={{ width: `${(s.count / maxCount) * 100}%`, background: s.color }} />
+                </div>
+                <div className="muscle-bar-stats">
+                  <span className="muscle-bar-count" style={{ color: s.color }}>{s.count}×</span>
+                  <span className="muscle-bar-pct">{s.pct}%</span>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Insight: pontos fracos */}
+          {(() => {
+            const allCats = Object.keys(CAT_INFO);
+            const trainedCats = new Set(stats.map(s => s.cat));
+            const missing = allCats.filter(c => !trainedCats.has(c) && ['abs','chest','back','shoulders','arms','legs','glutes'].includes(c));
+            if (missing.length === 0) return null;
+            return (
+              <div className="muscle-insight">
+                <p className="muscle-insight-title">⚠️ Grupos não treinados nos últimos {period} dias:</p>
+                <div className="muscle-insight-tags">
+                  {missing.slice(0, 4).map(c => (
+                    <span key={c} className="muscle-missing-tag" style={{ color: CAT_INFO[c].color, border: `1px solid ${CAT_INFO[c].color}44` }}>
+                      {CAT_INFO[c].emoji} {CAT_INFO[c].label}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            );
+          })()}
+        </>
+      )}
     </div>
   );
 }
