@@ -97,7 +97,7 @@ export default function FreeWorkoutBuilder({ userProfile, userId, onStart, onBac
 
         {/* Config: séries */}
         <div className="fw-config">
-          <span className="fw-config-label">🔁 Séries por exercício</span>
+          <span className="fw-config-label">Séries por exercício</span>
           <div className="fw-sets-control">
             <button className="fw-set-btn" onClick={() => setSets(s => Math.max(1, s - 1))}>−</button>
             <span className="fw-sets-value">{sets}</span>
@@ -108,23 +108,23 @@ export default function FreeWorkoutBuilder({ userProfile, userId, onStart, onBac
         {/* Info de duração */}
         {exercises.length > 0 && (
           <div className="fw-info-bar">
-            <span>💪 {exercises.length} exercício{exercises.length !== 1 ? 's' : ''}</span>
-            <span>🔁 {sets} séries</span>
-            <span>⏱ ~{Math.round(totalTime / 60)} min</span>
+            <span>{exercises.length} exercício{exercises.length !== 1 ? 's' : ''}</span>
+            <span>{sets} séries</span>
+            <span>~{Math.round(totalTime / 60)} min</span>
           </div>
         )}
 
         {/* Lista de exercícios */}
         {exercises.length === 0 ? (
           <div className="fw-empty">
-            <p className="fw-empty-icon">🏋️</p>
+            <p className="fw-empty-icon" style={{ fontSize: 32, color: 'var(--text3)' }}>—</p>
             <p className="fw-empty-title">Nenhum exercício ainda</p>
             <p className="fw-empty-sub">Adicione exercícios para montar seu treino</p>
           </div>
         ) : (
           <div className="fw-exercise-list">
             {exercises.map((ex, i) => {
-              const catInfo = CATEGORY_LABELS[ex.category] || { color: '#6C3AFF', emoji: '•', label: ex.category };
+              const catInfo = CATEGORY_LABELS[ex.category] || { color: '#6C3AFF', label: ex.category };
               const eqInfo  = EQ_BADGE[ex.equipment] || null;
               return (
                 <div key={i} className="fw-ex-item">
@@ -133,12 +133,12 @@ export default function FreeWorkoutBuilder({ userProfile, userId, onStart, onBac
                     <span className="fw-ex-num">{i + 1}</span>
                     <button className="fw-order-btn" onClick={() => handleMoveDown(i)} disabled={i === exercises.length - 1}>↓</button>
                   </div>
-                  <span className="fw-ex-emoji">{ex.gif}</span>
+                  <div className="fw-ex-dot" style={{ background: catInfo.color }} />
                   <div className="fw-ex-info">
                     <p className="fw-ex-name">{ex.name}</p>
                     <div className="fw-ex-meta">
-                      <span style={{ color: catInfo.color }}>{catInfo.emoji} {catInfo.label}</span>
-                      {eqInfo && <span className="eq-badge-sm">{eqInfo.emoji} {eqInfo.label}</span>}
+                      <span style={{ color: catInfo.color }}>{catInfo.label}</span>
+                      {eqInfo && <span className="eq-badge-sm">{eqInfo.label}</span>}
                       <span>⏱ {ex.duration}s</span>
                     </div>
                   </div>
@@ -151,15 +151,14 @@ export default function FreeWorkoutBuilder({ userProfile, userId, onStart, onBac
 
         {/* Botão adicionar */}
         <button className="fw-add-btn" onClick={() => setShowPicker(true)}
-          style={{ borderColor: genreInfo.color, color: genreInfo.color }}>
+          style={{ borderColor: 'var(--primary)', color: 'var(--primary)' }}>
           + Adicionar Exercício
         </button>
 
         {/* Botão iniciar */}
         {exercises.length > 0 && (
-          <button className="btn-primary btn-full fw-start-btn" onClick={handleStart}
-            style={{ background: `linear-gradient(135deg, ${genreInfo.color}, ${genreInfo.color}cc)` }}>
-            🎵 Iniciar Treino com Música
+          <button className="btn-primary btn-full fw-start-btn" onClick={handleStart}>
+            Iniciar Treino com Música
           </button>
         )}
       </div>
@@ -227,7 +226,7 @@ function ExercisePicker({ restricted, alreadyAdded, onSelect, onClose, genreInfo
 
         {/* Busca */}
         <div className="picker-search-bar">
-          <span className="search-icon">🔍</span>
+          <span className="search-icon" style={{ color: 'var(--text3)', fontSize: 14 }}>⌕</span>
           <input type="text" placeholder="Nome, músculo ou equipamento..."
             value={search} onChange={e => setSearch(e.target.value)} autoFocus />
           {search && <button className="search-clear" onClick={() => setSearch('')}>✕</button>}
@@ -238,8 +237,8 @@ function ExercisePicker({ restricted, alreadyAdded, onSelect, onClose, genreInfo
         <div className="picker-cats">
           {categories.map(cat => {
             const info = cat === 'all'
-              ? { label: 'Todos', emoji: '📋', color: '#6C3AFF' }
-              : CATEGORY_LABELS[cat] || { label: cat, emoji: '•', color: '#6C3AFF' };
+              ? { label: 'Todos', color: '#6C3AFF' }
+              : CATEGORY_LABELS[cat] || { label: cat, color: '#6C3AFF' };
             return (
               <button key={cat}
                 className={`cat-chip ${catFilter === cat ? 'active' : ''}`}
@@ -285,27 +284,27 @@ function ExercisePicker({ restricted, alreadyAdded, onSelect, onClose, genreInfo
         <div className="picker-list">
           {filtered.length === 0 ? (
             <div className="picker-empty">
-              <p>😅 Nenhum exercício encontrado</p>
+              <p>Nenhum exercício encontrado</p>
               <p>Tente mudar os filtros</p>
             </div>
           ) : filtered.map(ex => {
-            const catInfo = CATEGORY_LABELS[ex.category] || { color: '#6C3AFF', emoji: '•', label: ex.category };
+            const catInfo = CATEGORY_LABELS[ex.category] || { color: '#6C3AFF', label: ex.category };
             const eqInfo  = EQ_BADGE[ex.equipment] || null;
             const added   = alreadyAdded.includes(ex.id);
             return (
               <div key={ex.id} className={`picker-item ${added ? 'picker-item-added' : ''}`}>
-                <span className="picker-item-emoji">{ex.gif}</span>
+                <div className="picker-item-dot" style={{ background: catInfo.color }} />
                 <div className="picker-item-info" onClick={() => setDetailEx(ex)} style={{ cursor: 'pointer', flex: 1 }}>
                   <div className="picker-item-name-row">
                     <span className="picker-item-name">{ex.name}</span>
                     {added && <span className="added-tag">✓ Adicionado</span>}
                   </div>
                   <div className="picker-item-meta">
-                    <span className="picker-cat-badge" style={{ color: catInfo.color }}>{catInfo.emoji} {catInfo.label}</span>
+                    <span className="picker-cat-badge">{catInfo.label}</span>
                     {eqInfo && (
-                      <span className="picker-eq-badge">{eqInfo.emoji} {eqInfo.label}</span>
+                      <span className="picker-eq-badge">{eqInfo.label}</span>
                     )}
-                    <span className="picker-bpm">🎵 {ex.bpmMin}–{ex.bpmMax} BPM</span>
+                    <span className="picker-bpm">{ex.bpmMin}–{ex.bpmMax} BPM</span>
                   </div>
                   <div className="picker-muscles">
                     {(ex.muscles || []).slice(0, 3).map((m, i) => (
@@ -314,9 +313,9 @@ function ExercisePicker({ restricted, alreadyAdded, onSelect, onClose, genreInfo
                   </div>
                 </div>
                 <div className="picker-item-actions">
-                  <button className="picker-info-btn" onClick={() => setDetailEx(ex)} title="Ver detalhes">ℹ️</button>
+                  <button className="picker-info-btn" onClick={() => setDetailEx(ex)} title="Ver detalhes">i</button>
                   {!added && (
-                    <button className="picker-add-btn" style={{ color: genreInfo.color, borderColor: genreInfo.color }}
+                    <button className="picker-add-btn" style={{ color: 'var(--primary)', borderColor: 'var(--primary)' }}
                       onClick={() => onSelect(ex)}>+</button>
                   )}
                 </div>

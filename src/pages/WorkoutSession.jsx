@@ -4,10 +4,9 @@ import { exerciseLibrary, healthConditions } from '../data/exercises';
 import { checkNewAchievements } from '../data/achievements';
 import { getSpotifyEmbedUrl } from '../data/spotify';
 import ExerciseDetailModal from '../components/ExerciseDetailModal';
-import { CATEGORY_LABELS, EQUIPMENT_FILTERS, EQ_BADGE as EQ_BADGE_MAP } from '../data/categories';
+import { CATEGORY_LABELS } from '../data/categories';
 
 const PHASES = { WARMUP: 'warmup', EXERCISE: 'exercise', REST: 'rest', SETREST: 'setrest', COMPLETE: 'complete' };
-const EQ_BADGE = Object.fromEntries(Object.entries(EQ_BADGE_MAP).map(([k, v]) => [k, { label: v, emoji: '' }]));
 
 // ── Vibração (Vibration API) ───────────────────────────────────────────────
 function vibrate(pattern) {
@@ -393,7 +392,7 @@ export default function WorkoutSession({ workout, userProfile, userId, onFinish 
       {/* ── ALERTA DE NOVO RECORDE ── */}
       {showPrAlert && (
         <div className="pr-alert">
-          <span className="pr-alert-icon">🏆</span>
+          <span className="pr-alert-icon" style={{ fontSize: 24, color: 'var(--gold)' }}>PR</span>
           <div>
             <p className="pr-alert-title">NOVO RECORDE PESSOAL!</p>
             <p className="pr-alert-sub">{currentEx?.name}</p>
@@ -464,15 +463,15 @@ export default function WorkoutSession({ workout, userProfile, userId, onFinish 
         <>
           <div className="exercise-card" style={{ borderColor: pc.color }}>
             <div className="ex-card-top">
-              <span className="ex-emoji">{currentEx.gif}</span>
+              <div className="ex-cat-dot" style={{ width: 4, height: 48, borderRadius: 2, background: pc.color, flexShrink: 0 }} />
               <div className="ex-info">
                 <div className="ex-name-row">
                   <h3>{currentEx.name}</h3>
-                  {currentEx.adapts && <span className="ex-adapted-tag">✅ Adaptado</span>}
+                  {currentEx.adapts && <span className="ex-adapted-tag">Adaptado</span>}
                 </div>
                 <p className="ex-desc">{currentEx.description}</p>
                 <div className="ex-bpm-hint">
-                  🎯 BPM ideal: <strong>{currentEx.bpmMin}–{currentEx.bpmMax}</strong>
+                  BPM ideal: <strong>{currentEx.bpmMin}–{currentEx.bpmMax}</strong>
                 </div>
                 <div className="ex-muscles">
                   {(currentEx.muscles || []).map((m, i) => <span key={i} className="muscle-tag">{m}</span>)}
@@ -554,7 +553,7 @@ export default function WorkoutSession({ workout, userProfile, userId, onFinish 
       )}
       {phase === PHASES.SETREST && (
         <div className="rest-card set-rest">
-          <p className="set-done-label">🏆 Série {currentSet} concluída!</p>
+          <p className="set-done-label">Série {currentSet} concluída</p>
           <p className="rest-sub">Respire fundo — próxima série em breve</p>
           <button className="rest-skip-btn" onClick={() => advancePhase()}>Iniciar próxima série ⏭</button>
         </div>
@@ -573,7 +572,7 @@ export default function WorkoutSession({ workout, userProfile, userId, onFinish 
                 <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
               </svg>
             </span>
-            <span>{showSpotify ? 'Fechar Spotify' : `Tocar no Spotify — ${genreInfo.emoji} ${genreInfo.label}`}</span>
+            <span>{showSpotify ? 'Fechar Spotify' : `Tocar no Spotify — ${genreInfo.label}`}</span>
             <span className="spotify-arrow">{showSpotify ? '▲' : '▼'}</span>
           </button>
           {showSpotify && (
@@ -596,8 +595,8 @@ export default function WorkoutSession({ workout, userProfile, userId, onFinish 
       {/* ── MUSIC PLAYER ── */}
       <div className="music-player">
         <div className="music-header">
-          <span className="music-genre-badge" style={{ backgroundColor: genreInfo.color + '33', color: genreInfo.color }}>
-            {genreInfo.emoji} {genreInfo.label}
+          <span className="music-genre-badge" style={{ backgroundColor: 'var(--primary-dim)', color: 'var(--primary)' }}>
+            {genreInfo.label}
           </span>
           {currentTrack && (
             <div className="music-bpm-group">
@@ -639,28 +638,28 @@ export default function WorkoutSession({ workout, userProfile, userId, onFinish 
 
 // ── Filtros de equipamento (shared) ───────────────────────────────────────
 const EQUIPMENT_FILTERS = {
-  all:     { label: 'Todos',      emoji: '📋', color: '#6C3AFF', match: null },
-  free:    { label: 'Sem Peso',   emoji: '🏠', color: '#10B981', match: ['peso_corporal','banco','paralelas','barra_fixa'] },
-  dumbell: { label: 'Haltere',    emoji: '🏋️', color: '#F59E0B', match: ['haltere','kettlebell'] },
-  barbell: { label: 'Barra',      emoji: '🔩', color: '#8B5CF6', match: ['barra','smith'] },
-  machine: { label: 'Máquina',    emoji: '🖥️', color: '#3B82F6', match: ['maquina'] },
-  cable:   { label: 'Cabo',       emoji: '🔗', color: '#14B8A6', match: ['cabo'] },
-  other:   { label: 'Outros',     emoji: '🎀', color: '#EC4899', match: ['elastico','roda_abdominal','kettlebell','bola','faixa'] },
+  all:     { label: 'Todos',    color: '#6C3AFF', match: null },
+  free:    { label: 'Sem Peso', color: '#6C3AFF', match: ['peso_corporal','banco','paralelas','barra_fixa'] },
+  dumbell: { label: 'Haltere',  color: '#6C3AFF', match: ['haltere','kettlebell'] },
+  barbell: { label: 'Barra',    color: '#6C3AFF', match: ['barra','smith'] },
+  machine: { label: 'Máquina',  color: '#6C3AFF', match: ['maquina'] },
+  cable:   { label: 'Cabo',     color: '#6C3AFF', match: ['cabo'] },
+  other:   { label: 'Outros',   color: '#6C3AFF', match: ['elastico','roda_abdominal','kettlebell','bola','faixa'] },
 };
 
 const EQ_BADGE = {
-  peso_corporal:  { label: 'Corpo Livre', emoji: '🏠' },
-  banco:          { label: 'Banco',       emoji: '🪑' },
-  paralelas:      { label: 'Paralelas',   emoji: '⊧'  },
-  barra_fixa:     { label: 'Barra Fixa',  emoji: '🔝' },
-  haltere:        { label: 'Haltere',     emoji: '🏋️' },
-  kettlebell:     { label: 'Kettlebell',  emoji: '⚫' },
-  barra:          { label: 'Barra',       emoji: '🔩' },
-  smith:          { label: 'Smith',       emoji: '🔩' },
-  maquina:        { label: 'Máquina',     emoji: '🖥️' },
-  cabo:           { label: 'Cabo',        emoji: '🔗' },
-  elastico:       { label: 'Elástico',    emoji: '🎀' },
-  roda_abdominal: { label: 'Roda Abd.',   emoji: '⚙️' },
+  peso_corporal:  { label: 'Corpo Livre' },
+  banco:          { label: 'Banco'       },
+  paralelas:      { label: 'Paralelas'   },
+  barra_fixa:     { label: 'Barra Fixa'  },
+  haltere:        { label: 'Haltere'     },
+  kettlebell:     { label: 'Kettlebell'  },
+  barra:          { label: 'Barra'       },
+  smith:          { label: 'Smith'       },
+  maquina:        { label: 'Máquina'     },
+  cabo:           { label: 'Cabo'        },
+  elastico:       { label: 'Elástico'    },
+  roda_abdominal: { label: 'Roda Abd.'   },
 };
 
 // ── MODAL: Trocar Exercício (estilo Hevy) ──────────────────────────────────
@@ -724,7 +723,7 @@ function ExercisePicker({ currentEx, restricted, onSelect, onClose, genreInfo })
 
         {/* Busca */}
         <div className="picker-search-bar">
-          <span className="search-icon">🔍</span>
+          <span className="search-icon" style={{ color: 'var(--text3)', fontSize: 14 }}>⌕</span>
           <input type="text" placeholder="Nome, músculo ou equipamento..." value={search}
             onChange={e => setSearch(e.target.value)} autoFocus />
           {search && <button className="search-clear" onClick={() => setSearch('')}>✕</button>}
@@ -735,8 +734,8 @@ function ExercisePicker({ currentEx, restricted, onSelect, onClose, genreInfo })
         <div className="picker-cats">
           {categories.map(cat => {
             const info = cat === 'all'
-              ? { label: 'Todos', emoji: '📋', color: '#6C3AFF' }
-              : CATEGORY_LABELS[cat] || { label: cat, emoji: '•', color: '#6C3AFF' };
+              ? { label: 'Todos', color: '#6C3AFF' }
+              : CATEGORY_LABELS[cat] || { label: cat, color: '#6C3AFF' };
             return (
               <button key={cat}
                 className={`cat-chip ${catFilter === cat ? 'active' : ''}`}
@@ -782,32 +781,31 @@ function ExercisePicker({ currentEx, restricted, onSelect, onClose, genreInfo })
 
         <div className="picker-list">
           {filtered.length === 0 ? (
-            <div className="picker-empty"><p>😕 Nenhum exercício encontrado</p><p>Tente outro termo ou filtro</p></div>
+            <div className="picker-empty"><p>Nenhum exercício encontrado</p><p>Tente outro termo ou filtro</p></div>
           ) : (
             filtered.map(ex => {
-              const catInfo   = CATEGORY_LABELS[ex.category] || { color: '#6C3AFF', emoji: '•', label: ex.category };
+              const catInfo   = CATEGORY_LABELS[ex.category] || { color: '#6C3AFF', label: ex.category };
               const eqInfo    = EQ_BADGE[ex.equipment] || null;
               const isCurrent = ex.id === currentEx?.id;
               return (
                 <div key={ex.id} className={`picker-item ${isCurrent ? 'picker-item-current' : ''}`}>
-                  <span className="picker-item-emoji">{ex.gif}</span>
+                  <div className="picker-item-dot" style={{ background: catInfo.color }} />
                   <div className="picker-item-info" onClick={() => setDetailEx(ex)} style={{ cursor: 'pointer', flex: 1 }}>
                     <div className="picker-item-name-row">
                       <span className="picker-item-name">{ex.name}</span>
                       {isCurrent && <span className="current-tag">Atual</span>}
-                      {ex.adapts && <span className="adapted-tag-sm">✅</span>}
                     </div>
                     <div className="picker-item-meta">
-                      <span className="picker-cat-badge" style={{ color: catInfo.color }}>{catInfo.emoji} {catInfo.label}</span>
-                      {eqInfo && <span className="picker-eq-badge">{eqInfo.emoji} {eqInfo.label}</span>}
-                      <span className="picker-bpm">🎵 {ex.bpmMin}–{ex.bpmMax} BPM</span>
+                      <span className="picker-cat-badge">{catInfo.label}</span>
+                      {eqInfo && <span className="picker-eq-badge">{eqInfo.label}</span>}
+                      <span className="picker-bpm">{ex.bpmMin}–{ex.bpmMax} BPM</span>
                     </div>
                     <div className="picker-muscles">
                       {(ex.muscles || []).slice(0, 3).map((m, i) => <span key={i} className="muscle-tag-sm">{m}</span>)}
                     </div>
                   </div>
                   <div className="picker-item-actions">
-                    <button className="picker-info-btn" onClick={() => setDetailEx(ex)} title="Ver detalhes">ℹ️</button>
+                    <button className="picker-info-btn" onClick={() => setDetailEx(ex)} title="Ver detalhes">i</button>
                     {!isCurrent && (
                       <button className="picker-swap-btn" onClick={() => { onSelect(ex); onClose(); }}
                         title="Usar este exercício">↔</button>
@@ -855,10 +853,9 @@ function WorkoutPanel({ exercises, currentIdx, completedExs, currentSet, sets, s
                   : current ? <span className="status-current" style={{ backgroundColor: phaseColor }}>▶</span>
                   :           <span className="status-pending">{i + 1}</span>}
                 </div>
-                <span className="panel-item-emoji">{ex.gif}</span>
                 <div className="panel-item-info">
                   <p className="panel-item-name">{ex.name}</p>
-                  <p className="panel-item-meta">{ex.duration}s · 🎵 {ex.bpmMin}–{ex.bpmMax} BPM</p>
+                  <p className="panel-item-meta">{ex.duration}s · {ex.bpmMin}–{ex.bpmMax} BPM</p>
                   {log && (
                     <p className="panel-item-log">
                       📊 {log.weight > 0 ? `${log.weight}kg × ` : ''}{log.reps > 0 ? `${log.reps} reps` : 'registrado'}
@@ -887,7 +884,7 @@ function HealthWarningScreen({ warnings, conditions, onContinue, onBack }) {
         <div className="hw-conditions">
           {conditions.map(c => (
             <span key={c.id} className="hw-condition-tag" style={{ borderColor: c.color, color: c.color }}>
-              {c.emoji} {c.label}
+              {c.label}
             </span>
           ))}
         </div>
@@ -895,7 +892,7 @@ function HealthWarningScreen({ warnings, conditions, onContinue, onBack }) {
           {warnings.map((w, i) => <div key={i} className="hw-warning-item"><p>{w}</p></div>)}
         </div>
         <div className="hw-disclaimer">
-          <p>⚕️ Este app não substitui orientação médica. Em caso de dúvida, consulte um profissional de saúde antes de iniciar qualquer atividade física.</p>
+          <p>Este app não substitui orientação médica. Em caso de dúvida, consulte um profissional de saúde antes de iniciar qualquer atividade física.</p>
         </div>
         <div className="hw-actions">
           <button className="btn-secondary" onClick={onBack}>← Voltar</button>
@@ -920,14 +917,14 @@ function CompletionScreen({ workout, totalCalories, elapsed, completedExs, setLo
     const lines = [
       `🏆 Treino concluído no GymBeat!`,
       ``,
-      `📅 ${workout.day}${workout.category ? ` — ${workout.category.toUpperCase()}` : ''}`,
-      `⏱ Duração: ${formatDuration(elapsed)}`,
-      `🔥 Calorias: ${totalCalories} kcal`,
-      `💪 Séries: ${completedExs.length}`,
-      `🎵 Ritmo: ${genreInfo.emoji} ${genreInfo.label}`,
+      `${workout.day}${workout.category ? ` — ${workout.category.toUpperCase()}` : ''}`,
+      `Duração: ${formatDuration(elapsed)}`,
+      `Calorias: ${totalCalories} kcal`,
+      `Séries: ${completedExs.length}`,
+      `Ritmo: ${genreInfo.label}`,
     ];
     if (setLogs.length > 0) {
-      lines.push(``, `📊 Cargas:`);
+      lines.push(``, `Cargas:`);
       setLogs.forEach(l => {
         const val = [l.weight > 0 ? `${l.weight}kg` : '', l.reps > 0 ? `${l.reps} reps` : ''].filter(Boolean).join(' × ');
         lines.push(`  • ${l.exName}: ${val}`);
@@ -956,7 +953,7 @@ function CompletionScreen({ workout, totalCalories, elapsed, completedExs, setLo
   return (
     <div className="completion-screen">
       <div className="completion-content">
-        <div className="completion-emoji">🏆</div>
+        <div className="completion-emoji" style={{ fontSize: 48, fontWeight: 900, color: 'var(--gold)', letterSpacing: '-0.02em' }}>GG</div>
         <h2>Treino Concluído!</h2>
         <p className="comp-subtitle">Você arrasou no treino de {workout.day}!</p>
 
@@ -995,7 +992,7 @@ function CompletionScreen({ workout, totalCalories, elapsed, completedExs, setLo
 
         <div className="completion-genre">
           <p>Treinou no ritmo de</p>
-          <span className="genre-badge" style={{ backgroundColor: genreInfo.color }}>{genreInfo.emoji} {genreInfo.label}</span>
+          <span className="genre-badge" style={{ backgroundColor: 'var(--primary)' }}>{genreInfo.label}</span>
         </div>
 
         <div className="comp-exercises">

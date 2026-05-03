@@ -63,24 +63,24 @@ export default function Dashboard({ user, onStartWorkout, onCreatePlan, onLogout
         <div className="dash-user">
           <div className="avatar">{user.name?.[0]?.toUpperCase()}</div>
           <div>
-            <p className="dash-greeting">Olá, {user.name?.split(' ')[0]}! 👋</p>
+            <p className="dash-greeting">Olá, {user.name?.split(' ')[0]}</p>
             <p className="dash-subtitle">
-              {primaryGenre ? `${primaryGenre.emoji} ${primaryGenre.label}` : 'Configure seu perfil'}
+              {primaryGenre ? primaryGenre.label : 'Configure seu perfil'}
             </p>
           </div>
         </div>
         <button className="theme-toggle" onClick={toggleTheme} title="Alternar tema">
-          {theme === 'dark' ? '☀️' : '🌙'}
+          {theme === 'dark' ? '○' : '●'}
         </button>
-        <button className="btn-icon" onClick={onOpenProfile} title="Perfil">⚙️</button>
+        <button className="btn-icon" onClick={onOpenProfile} title="Perfil">≡</button>
       </header>
 
       <nav className="dash-nav">
         {[
-          { id: 'home',      label: '🏠 Início'   },
-          { id: 'planos',    label: '📋 Planos'   },
-          { id: 'historico', label: '📊 Histórico'},
-          { id: 'evolucao',  label: '📈 Evolução' },
+          { id: 'home',      label: 'Início'    },
+          { id: 'planos',    label: 'Planos'    },
+          { id: 'historico', label: 'Histórico' },
+          { id: 'evolucao',  label: 'Evolução'  },
         ].map(({ id, label }) => (
           <button
             key={id}
@@ -96,10 +96,10 @@ export default function Dashboard({ user, onStartWorkout, onCreatePlan, onLogout
         {activeTab === 'home' && (
           <>
             <div className="stats-row">
-              <StatCard icon="🔥" value={streak} label="Dias seguidos" color="#FF6B35" />
-              <StatCard icon="⏱️" value={Math.round(totalMinutes)} label="Minutos totais" color="#8B5CF6" />
-              <StatCard icon="💪" value={history.length} label="Treinos feitos" color="#06B6D4" />
-              <StatCard icon="🎵" value={totalCalories} label="Cal. queimadas" color="#EC4899" />
+              <StatCard icon="—" value={streak} label="Sequência" color="var(--primary)" />
+              <StatCard icon="—" value={Math.round(totalMinutes)} label="Minutos" color="var(--primary)" />
+              <StatCard icon="—" value={history.length} label="Treinos" color="var(--primary)" />
+              <StatCard icon="—" value={totalCalories} label="Calorias" color="var(--primary)" />
             </div>
 
             {todayWorkout ? (
@@ -110,18 +110,18 @@ export default function Dashboard({ user, onStartWorkout, onCreatePlan, onLogout
                     <h3>{todayWorkout.day} — {CAT_PT[todayWorkout.category] || todayWorkout.category?.toUpperCase()}</h3>
                     <p>{todayWorkout.exercises?.length} exercícios · {todayWorkout.sets} séries · ~{Math.round(todayWorkout.totalTime / 60)} min</p>
                   </div>
-                  <span className="today-emoji">🏋️</span>
+                  <span className="today-emoji" style={{ display: 'none' }} />
                 </div>
                 <div className="exercise-preview">
                   {todayWorkout.exercises?.slice(0, 3).map((ex, i) => (
-                    <span key={i} className="ex-chip">{ex.gif} {ex.name}</span>
+                    <span key={i} className="ex-chip">{ex.name}</span>
                   ))}
                   {todayWorkout.exercises?.length > 3 && (
                     <span className="ex-chip">+{todayWorkout.exercises.length - 3}</span>
                   )}
                 </div>
                 <button className="btn-primary btn-full" onClick={() => onStartWorkout(todayWorkout, profile)}>
-                  🎵 Iniciar Treino com Música
+                  Iniciar Treino
                 </button>
               </div>
             ) : hasPlan ? (
@@ -129,10 +129,10 @@ export default function Dashboard({ user, onStartWorkout, onCreatePlan, onLogout
                 <div className="today-header">
                   <div>
                     <p className="today-label">HOJE</p>
-                    <h3>😴 Dia de Descanso</h3>
-                    <p>Aproveite para recuperar a energia!</p>
+                    <h3>Dia de Descanso</h3>
+                    <p>Aproveite para recuperar a energia</p>
                   </div>
-                  <span className="today-emoji">🛌</span>
+                  <span className="today-emoji" style={{ display: 'none' }} />
                 </div>
                 {nextWorkout && (
                   <div className="next-workout-preview">
@@ -143,7 +143,7 @@ export default function Dashboard({ user, onStartWorkout, onCreatePlan, onLogout
                     </div>
                     <div className="exercise-preview" style={{ marginTop: '8px' }}>
                       {nextWorkout.exercises?.slice(0, 3).map((ex, i) => (
-                        <span key={i} className="ex-chip">{ex.gif} {ex.name}</span>
+                        <span key={i} className="ex-chip">{ex.name}</span>
                       ))}
                       {nextWorkout.exercises?.length > 3 && (
                         <span className="ex-chip">+{nextWorkout.exercises.length - 3}</span>
@@ -156,7 +156,7 @@ export default function Dashboard({ user, onStartWorkout, onCreatePlan, onLogout
               <div className="empty-today">
                 <p>Nenhum plano criado ainda</p>
                 <button className="btn-primary" onClick={handleCreatePlan}>
-                  ✨ Criar Meu Plano Personalizado
+                  Criar Meu Plano Personalizado
                 </button>
               </div>
             )}
@@ -173,7 +173,6 @@ export default function Dashboard({ user, onStartWorkout, onCreatePlan, onLogout
 
             {/* Conquistas */}
             <button className="free-workout-btn achievements-btn" onClick={onOpenAchievements}>
-              <span className="fw-icon">🏅</span>
               <div className="fw-text">
                 <span className="fw-title">Conquistas</span>
                 <span className="fw-sub">Veja seus badges e progresso</span>
@@ -183,7 +182,6 @@ export default function Dashboard({ user, onStartWorkout, onCreatePlan, onLogout
 
             {/* Treino Livre */}
             <button className="free-workout-btn" onClick={onFreeWorkout}>
-              <span className="fw-icon">🎲</span>
               <div className="fw-text">
                 <span className="fw-title">Treino Livre</span>
                 <span className="fw-sub">Monte seu treino do zero, na hora</span>
@@ -197,8 +195,8 @@ export default function Dashboard({ user, onStartWorkout, onCreatePlan, onLogout
                 {(profile.musicGenres || []).map(gId => {
                   const g = musicGenres.find(x => x.id === gId);
                   return g ? (
-                    <span key={gId} className="genre-chip" style={{ backgroundColor: g.color + '33', borderColor: g.color }}>
-                      {g.emoji} {g.label}
+                    <span key={gId} className="genre-chip" style={{ backgroundColor: 'var(--primary-dim)', borderColor: 'var(--primary)' }}>
+                      {g.label}
                     </span>
                   ) : null;
                 })}
@@ -215,7 +213,7 @@ export default function Dashboard({ user, onStartWorkout, onCreatePlan, onLogout
             </div>
             {plans.length === 0 ? (
               <div className="empty-state">
-                <p className="empty-icon">📋</p>
+                <p className="empty-icon" style={{ fontSize: 32, color: 'var(--text3)' }}>—</p>
                 <p>Nenhum plano criado</p>
                 <button className="btn-primary" onClick={handleCreatePlan}>Criar Plano</button>
               </div>
@@ -236,7 +234,7 @@ export default function Dashboard({ user, onStartWorkout, onCreatePlan, onLogout
             <h3>Histórico de Treinos</h3>
             {history.length === 0 ? (
               <div className="empty-state">
-                <p className="empty-icon">📊</p>
+                <p className="empty-icon" style={{ fontSize: 32, color: 'var(--text3)' }}>—</p>
                 <p>Nenhum treino registrado ainda</p>
                 <p className="empty-sub">Complete seu primeiro treino!</p>
               </div>
@@ -247,16 +245,16 @@ export default function Dashboard({ user, onStartWorkout, onCreatePlan, onLogout
                   {history.slice(0, 20).map((h, i) => (
                     <div key={i} className="history-item">
                       <div className="hist-left">
-                        <span className="hist-icon">💪</span>
+                        <div style={{ width: 4, height: 32, borderRadius: 2, background: 'var(--primary)', flexShrink: 0 }} />
                         <div>
                           <p className="hist-name">{h.workoutName || 'Treino'}</p>
                           <p className="hist-date">{new Date(h.date).toLocaleDateString('pt-BR')}</p>
                         </div>
                       </div>
                       <div className="hist-stats">
-                        <span>⏱ {h.duration || 0} min</span>
-                        <span>🔥 {h.calories || 0} cal</span>
-                        {h.exercises > 0 && <span>💪 {h.exercises} séries</span>}
+                        <span>{h.duration || 0} min</span>
+                        <span>{h.calories || 0} cal</span>
+                        {h.exercises > 0 && <span>{h.exercises} séries</span>}
                       </div>
                       {h.logs && h.logs.length > 0 && (
                         <div className="hist-logs">
@@ -315,11 +313,11 @@ function WeeklyChart({ history }) {
   return (
     <div className="weekly-chart">
       <div className="chart-header">
-        <h4>📈 Últimos 7 Dias</h4>
+        <h4>Últimos 7 Dias</h4>
         <div className="chart-summary">
-          <span>🔥 {weekCal} cal</span>
-          <span>⏱ {weekMin} min</span>
-          <span>💪 {weekCount} treino{weekCount !== 1 ? 's' : ''}</span>
+          <span>{weekCal} cal</span>
+          <span>{weekMin} min</span>
+          <span>{weekCount} treino{weekCount !== 1 ? 's' : ''}</span>
         </div>
       </div>
       <div className="chart-bars">
@@ -345,10 +343,9 @@ function WeeklyChart({ history }) {
   );
 }
 
-function StatCard({ icon, value, label, color }) {
+function StatCard({ value, label, color }) {
   return (
-    <div className="stat-card" style={{ borderTop: `3px solid ${color}` }}>
-      <span className="stat-icon">{icon}</span>
+    <div className="stat-card" style={{ borderTop: `2px solid ${color}` }}>
       <span className="stat-value" style={{ color }}>{value}</span>
       <span className="stat-label">{label}</span>
     </div>
@@ -408,9 +405,9 @@ function EvolutionTab({ userId }) {
       {/* Toggle cargas / músculos */}
       <div className="evo-view-toggle">
         <button className={`evo-toggle-btn ${activeView === 'loads' ? 'active' : ''}`}
-          onClick={() => setActiveView('loads')}>📈 Cargas</button>
+          onClick={() => setActiveView('loads')}>Cargas</button>
         <button className={`evo-toggle-btn ${activeView === 'muscles' ? 'active' : ''}`}
-          onClick={() => setActiveView('muscles')}>💪 Músculos</button>
+          onClick={() => setActiveView('muscles')}>Músculos</button>
       </div>
 
       {activeView === 'loads' ? (
@@ -418,7 +415,7 @@ function EvolutionTab({ userId }) {
           <p className="evo-subtitle">{exercises.length} exercício{exercises.length !== 1 ? 's' : ''} com histórico de carga</p>
           {exercises.length === 0 ? (
             <div className="empty-state" style={{ marginTop: 32 }}>
-              <p className="empty-icon">📈</p>
+              <p className="empty-icon" style={{ fontSize: 32, color: 'var(--text3)' }}>—</p>
               <p>Nenhum registro de carga ainda</p>
               <p className="empty-sub">Registre peso e reps durante os treinos para ver sua evolução!</p>
             </div>
@@ -454,7 +451,7 @@ function MuscleStatsView({ stats, period, onPeriodChange, total }) {
 
       {stats.length === 0 ? (
         <div className="empty-state" style={{ marginTop: 32 }}>
-          <p className="empty-icon">💪</p>
+          <p className="empty-icon" style={{ fontSize: 32, color: 'var(--text3)' }}>—</p>
           <p>Nenhum treino nos últimos {period} dias</p>
           <p className="empty-sub">Complete treinos para ver quais músculos você está focando!</p>
         </div>
@@ -465,7 +462,6 @@ function MuscleStatsView({ stats, period, onPeriodChange, total }) {
             {stats.map(s => (
               <div key={s.cat} className="muscle-bar-row">
                 <div className="muscle-bar-label">
-                  <span className="muscle-bar-emoji">{s.emoji}</span>
                   <span className="muscle-bar-name">{s.label}</span>
                 </div>
                 <div className="muscle-bar-track">
@@ -488,11 +484,11 @@ function MuscleStatsView({ stats, period, onPeriodChange, total }) {
             if (missing.length === 0) return null;
             return (
               <div className="muscle-insight">
-                <p className="muscle-insight-title">⚠️ Grupos não treinados nos últimos {period} dias:</p>
+                <p className="muscle-insight-title">Grupos não treinados nos últimos {period} dias:</p>
                 <div className="muscle-insight-tags">
                   {missing.slice(0, 4).map(c => (
-                    <span key={c} className="muscle-missing-tag" style={{ color: CAT_INFO[c].color, border: `1px solid ${CAT_INFO[c].color}44` }}>
-                      {CAT_INFO[c].emoji} {CAT_INFO[c].label}
+                    <span key={c} className="muscle-missing-tag" style={{ color: 'var(--primary)', border: `1px solid var(--border)` }}>
+                      {CAT_INFO[c].label}
                     </span>
                   ))}
                 </div>
@@ -531,7 +527,7 @@ function ExerciseProgressCard({ ex }) {
       <div className="evo-card-header">
         <span className="evo-ex-name">{name}</span>
         <div className="evo-badges">
-          <span className="evo-max">🏆 {maxW}kg</span>
+          <span className="evo-max">{maxW}kg</span>
           {improvement > 0 && <span className="evo-improve">+{improvement}kg</span>}
         </div>
       </div>
@@ -556,11 +552,11 @@ function ExerciseProgressCard({ ex }) {
           <text x={pts[n-1].x} y={H - 0} fontSize="8" fill="#6C3AFF" textAnchor="middle" fontWeight="bold">{logs[n-1].weight}kg</text>
         </svg>
       ) : (
-        <div className="evo-single-note">Apenas 1 registro · complete mais treinos para ver a evolução 📊</div>
+        <div className="evo-single-note">Apenas 1 registro · complete mais treinos para ver a evolução</div>
       )}
 
       <div className="evo-card-footer">
-        <span>🔁 {n} registro{n !== 1 ? 's' : ''}</span>
+        <span>{n} registro{n !== 1 ? 's' : ''}</span>
         <span>Último: {last.weight}kg × {last.reps}r · {new Date(last.date).toLocaleDateString('pt-BR')}</span>
       </div>
     </div>
@@ -587,11 +583,11 @@ function WeeklyPlanView({ plan, userId, todayIdx, onStartWorkout }) {
 
   return (
     <div className="weekly-view">
-      <h4 className="weekly-title">📅 Esta Semana</h4>
+      <h4 className="weekly-title">Esta Semana</h4>
       <div className="weekly-days">
         {DAY_LABELS.map((label, i) => {
           const planDay  = plan.days[i % plan.days.length];
-          const catInfo  = CAT_INFO[planDay?.category] || { emoji: '🏋️', color: '#6C3AFF', label: '—' };
+          const catInfo  = CAT_INFO[planDay?.category] || { color: '#6C3AFF', label: '—' };
           const done     = completedDays.has(i);
           const isToday  = i === todayIdx;
           const isFuture = i > todayIdx;
@@ -602,7 +598,12 @@ function WeeklyPlanView({ plan, userId, todayIdx, onStartWorkout }) {
               title={`${label}: ${catInfo.label}`}
             >
               <span className="weekly-label">{label}</span>
-              <span className="weekly-icon">{done ? '✅' : catInfo.emoji}</span>
+              <span className="weekly-icon">
+                {done
+                  ? <span style={{ color: '#10B981', fontSize: 14 }}>✓</span>
+                  : <span style={{ width: 8, height: 8, borderRadius: '50%', display: 'inline-block', background: planDay ? catInfo.color : 'var(--border)' }} />
+                }
+              </span>
               {isToday && <span className="weekly-today-dot" style={{ background: catInfo.color }} />}
             </button>
           );

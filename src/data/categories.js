@@ -1,24 +1,19 @@
 // ── Sistema de categorias unificado ─────────────────────────────────────────
-// 5 grupos de cor semânticos — sem arco-íris, sem emojis estranhos
+// Single accent color — premium, sem arco-íris, sem emojis
 
 export const CATEGORY_LABELS = {
-  // Força superior → roxo
-  chest:       { label: 'Peito',      emoji: '💪', color: '#7C3AED' },
-  back:        { label: 'Costas',     emoji: '💪', color: '#7C3AED' },
-  shoulders:   { label: 'Ombros',     emoji: '💪', color: '#7C3AED' },
-  arms:        { label: 'Braços',     emoji: '💪', color: '#7C3AED' },
-  // Core → azul-ciano
-  abs:         { label: 'Abdômen',    emoji: '🔥', color: '#0891B2' },
-  // Força inferior → azul
-  legs:        { label: 'Pernas',     emoji: '🦵', color: '#2563EB' },
-  glutes:      { label: 'Glúteos',    emoji: '🦵', color: '#2563EB' },
-  // Energia → laranja
-  cardio:      { label: 'Cardio',     emoji: '🏃', color: '#D97706' },
-  hiit:        { label: 'HIIT',       emoji: '⚡', color: '#DC2626' },
-  // Funcional → verde
-  strength:    { label: 'Força Func.',emoji: '🏋️', color: '#059669' },
-  flexibility: { label: 'Flex.',      emoji: '🧘', color: '#059669' },
-  adapted:     { label: 'Adaptado',   emoji: '✅', color: '#059669' },
+  abs:         { label: 'Abdômen',       color: '#6C3AFF' },
+  chest:       { label: 'Peito',         color: '#6C3AFF' },
+  back:        { label: 'Costas',        color: '#6C3AFF' },
+  shoulders:   { label: 'Ombros',        color: '#6C3AFF' },
+  arms:        { label: 'Braços',        color: '#6C3AFF' },
+  legs:        { label: 'Pernas',        color: '#6C3AFF' },
+  glutes:      { label: 'Glúteos',       color: '#6C3AFF' },
+  cardio:      { label: 'Cardio',        color: '#C9A84C' },
+  strength:    { label: 'Força',         color: '#6C3AFF' },
+  hiit:        { label: 'HIIT',          color: '#C9A84C' },
+  flexibility: { label: 'Flexibilidade', color: '#6C3AFF' },
+  adapted:     { label: 'Adaptado',      color: '#6C3AFF' },
 };
 
 // Tradução simples (sem cor) para exibição em texto puro
@@ -39,13 +34,13 @@ export const CAT_PT = {
 
 // ── Equipamentos ─────────────────────────────────────────────────────────────
 export const EQUIPMENT_FILTERS = {
-  all:     { label: 'Todos',      emoji: '',   color: '#6C3AFF', match: null },
-  free:    { label: 'Sem Peso',   emoji: '',   color: '#6C3AFF', match: ['peso_corporal','banco','paralelas','barra_fixa'] },
-  dumbell: { label: 'Haltere',    emoji: '',   color: '#6C3AFF', match: ['haltere','kettlebell'] },
-  barbell: { label: 'Barra',      emoji: '',   color: '#6C3AFF', match: ['barra','smith'] },
-  machine: { label: 'Máquina',    emoji: '',   color: '#6C3AFF', match: ['maquina'] },
-  cable:   { label: 'Cabo',       emoji: '',   color: '#6C3AFF', match: ['cabo'] },
-  other:   { label: 'Outros',     emoji: '',   color: '#6C3AFF', match: ['elastico','roda_abdominal','kettlebell','bola','faixa'] },
+  all:     { label: 'Todos',    color: '#6C3AFF', match: null },
+  free:    { label: 'Sem Peso', color: '#6C3AFF', match: ['peso_corporal','banco','paralelas','barra_fixa'] },
+  dumbell: { label: 'Haltere',  color: '#6C3AFF', match: ['haltere','kettlebell'] },
+  barbell: { label: 'Barra',    color: '#6C3AFF', match: ['barra','smith'] },
+  machine: { label: 'Máquina',  color: '#6C3AFF', match: ['maquina'] },
+  cable:   { label: 'Cabo',     color: '#6C3AFF', match: ['cabo'] },
+  other:   { label: 'Outros',   color: '#6C3AFF', match: ['elastico','roda_abdominal','kettlebell','bola','faixa'] },
 };
 
 export const EQ_BADGE = {
