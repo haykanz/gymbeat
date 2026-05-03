@@ -4,23 +4,10 @@ import { exerciseLibrary, healthConditions } from '../data/exercises';
 import { checkNewAchievements } from '../data/achievements';
 import { getSpotifyEmbedUrl } from '../data/spotify';
 import ExerciseDetailModal from '../components/ExerciseDetailModal';
+import { CATEGORY_LABELS, EQUIPMENT_FILTERS, EQ_BADGE as EQ_BADGE_MAP } from '../data/categories';
 
 const PHASES = { WARMUP: 'warmup', EXERCISE: 'exercise', REST: 'rest', SETREST: 'setrest', COMPLETE: 'complete' };
-
-const CATEGORY_LABELS = {
-  abs:         { label: 'Abdômen',   emoji: '🎯', color: '#F97316' },
-  chest:       { label: 'Peito',     emoji: '🫁', color: '#EC4899' },
-  back:        { label: 'Costas',    emoji: '🔙', color: '#14B8A6' },
-  shoulders:   { label: 'Ombros',    emoji: '🏔️', color: '#6366F1' },
-  arms:        { label: 'Braços',    emoji: '💪', color: '#A855F7' },
-  legs:        { label: 'Pernas',    emoji: '🦵', color: '#3B82F6' },
-  glutes:      { label: 'Glúteos',   emoji: '🍑', color: '#F43F5E' },
-  cardio:      { label: 'Cardio',    emoji: '🏃', color: '#F59E0B' },
-  strength:    { label: 'Força',     emoji: '🏋️', color: '#8B5CF6' },
-  hiit:        { label: 'HIIT',      emoji: '🔥', color: '#EF4444' },
-  flexibility: { label: 'Flex.',     emoji: '🧘', color: '#06B6D4' },
-  adapted:     { label: 'Adaptado',  emoji: '✅', color: '#10B981' },
-};
+const EQ_BADGE = Object.fromEntries(Object.entries(EQ_BADGE_MAP).map(([k, v]) => [k, { label: v, emoji: '' }]));
 
 // ── Vibração (Vibration API) ───────────────────────────────────────────────
 function vibrate(pattern) {
@@ -753,10 +740,10 @@ function ExercisePicker({ currentEx, restricted, onSelect, onClose, genreInfo })
             return (
               <button key={cat}
                 className={`cat-chip ${catFilter === cat ? 'active' : ''}`}
-                style={catFilter === cat ? { backgroundColor: info.color, borderColor: info.color } : {}}
+                style={{}}
                 onClick={() => setCatFilter(cat)}
               >
-                {info.emoji} {info.label}
+                {info.label}
               </button>
             );
           })}
@@ -772,11 +759,11 @@ function ExercisePicker({ currentEx, restricted, onSelect, onClose, genreInfo })
             return (
               <button key={key}
                 className={`eq-chip ${active ? 'active' : ''} ${count === 0 ? 'disabled' : ''}`}
-                style={active ? { backgroundColor: info.color, borderColor: info.color } : {}}
+                style={{}}
                 onClick={() => count > 0 && setEqFilter(key)}
                 disabled={count === 0}
               >
-                <span>{info.emoji} {info.label}</span>
+                <span>{info.label}</span>
                 {count > 0 && <span className="eq-chip-count">{count}</span>}
               </button>
             );

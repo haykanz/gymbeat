@@ -1,21 +1,9 @@
 import { useState, useMemo } from 'react';
 import { generateWorkoutPlan } from '../data/exercises';
 import { musicGenres } from '../data/music';
+import { CATEGORY_LABELS as CAT_INFO_MAP, CAT_PT } from '../data/categories';
 
-const CAT_PT = {
-  abs:         'Abdômen',
-  chest:       'Peito',
-  back:        'Costas',
-  shoulders:   'Ombros',
-  arms:        'Braços',
-  legs:        'Pernas',
-  glutes:      'Glúteos',
-  cardio:      'Cardio',
-  strength:    'Força',
-  hiit:        'HIIT',
-  flexibility:  'Flexibilidade',
-  adapted:     'Adaptado',
-};
+const CAT_INFO = CAT_INFO_MAP;
 
 export default function Dashboard({ user, onStartWorkout, onCreatePlan, onLogout, onOpenProfile, onFreeWorkout, onOpenAchievements, theme, toggleTheme }) {
   const profile = user.profile || {};
@@ -367,20 +355,6 @@ function StatCard({ icon, value, label, color }) {
   );
 }
 
-const CAT_INFO = {
-  abs:         { label: 'Abdômen',   emoji: '🎯', color: '#F97316' },
-  chest:       { label: 'Peito',     emoji: '🫁', color: '#EC4899' },
-  back:        { label: 'Costas',    emoji: '🔙', color: '#14B8A6' },
-  shoulders:   { label: 'Ombros',    emoji: '🏔️', color: '#6366F1' },
-  arms:        { label: 'Braços',    emoji: '💪', color: '#A855F7' },
-  legs:        { label: 'Pernas',    emoji: '🦵', color: '#3B82F6' },
-  glutes:      { label: 'Glúteos',   emoji: '🍑', color: '#F43F5E' },
-  cardio:      { label: 'Cardio',    emoji: '🏃', color: '#F59E0B' },
-  strength:    { label: 'Força',     emoji: '🏋️', color: '#8B5CF6' },
-  hiit:        { label: 'HIIT',      emoji: '🔥', color: '#EF4444' },
-  flexibility: { label: 'Flex.',     emoji: '🧘', color: '#06B6D4' },
-  adapted:     { label: 'Adaptado',  emoji: '✅', color: '#10B981' },
-};
 
 // ── Evolução de Cargas ────────────────────────────────────────────────────
 function EvolutionTab({ userId }) {
@@ -624,7 +598,6 @@ function WeeklyPlanView({ plan, userId, todayIdx, onStartWorkout }) {
           return (
             <button key={i}
               className={`weekly-day ${isToday ? 'today' : ''} ${done ? 'done' : ''} ${isFuture ? 'future' : ''}`}
-              style={isToday ? { borderColor: catInfo.color, background: catInfo.color + '18' } : {}}
               onClick={() => !isFuture && planDay && onStartWorkout(planDay)}
               title={`${label}: ${catInfo.label}`}
             >

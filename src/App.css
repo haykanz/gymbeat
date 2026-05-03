@@ -643,21 +643,21 @@ body {
 /* Chips de categoria */
 .picker-cats { display: flex; gap: 6px; padding: 4px 16px 8px; overflow-x: auto; scrollbar-width: none; }
 .picker-cats::-webkit-scrollbar { display: none; }
-.cat-chip { flex-shrink: 0; padding: 6px 12px; border: 1px solid var(--border); border-radius: 20px; background: var(--bg3); color: var(--text2); font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
-.cat-chip.active { color: white; }
+.cat-chip { flex-shrink: 0; padding: 5px 11px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg3); color: var(--text2); font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+.cat-chip.active { background: var(--primary); border-color: var(--primary); color: white; }
 
 /* Chips de equipamento */
 .picker-eq-filters { display: flex; gap: 6px; padding: 4px 16px 8px; overflow-x: auto; scrollbar-width: none; flex-wrap: wrap; }
 .picker-eq-filters::-webkit-scrollbar { display: none; }
-.eq-chip { display: flex; align-items: center; gap: 5px; flex-shrink: 0; padding: 5px 10px; border: 1px solid var(--border); border-radius: 20px; background: var(--bg3); color: var(--text2); font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
-.eq-chip.active { color: white; }
-.eq-chip.disabled { opacity: 0.35; cursor: not-allowed; }
-.eq-chip-count { font-size: 10px; background: rgba(255,255,255,0.2); border-radius: 10px; padding: 1px 5px; font-weight: 700; }
-.eq-chip:not(.active) .eq-chip-count { background: var(--bg2); color: var(--text3); }
+.eq-chip { display: flex; align-items: center; gap: 5px; flex-shrink: 0; padding: 5px 10px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg3); color: var(--text2); font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+.eq-chip.active { background: var(--primary); border-color: var(--primary); color: white; }
+.eq-chip.disabled { opacity: 0.3; cursor: not-allowed; }
+.eq-chip-count { font-size: 10px; background: var(--bg); border-radius: 4px; padding: 1px 5px; font-weight: 700; color: var(--text3); }
+.eq-chip.active .eq-chip-count { background: rgba(255,255,255,0.2); color: white; }
 
-/* Badge de equipamento nos items */
-.picker-eq-badge { font-size: 11px; color: var(--text3); background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 1px 6px; white-space: nowrap; }
-.eq-badge-sm { font-size: 11px; color: var(--text3); }
+/* Badge de equipamento nos items — sem cor, discreto */
+.picker-eq-badge { font-size: 11px; color: var(--text3); background: transparent; border: 1px solid var(--border); border-radius: 4px; padding: 1px 6px; white-space: nowrap; font-weight: 500; }
+.eq-badge-sm { font-size: 11px; color: var(--text3); font-weight: 500; }
 
 /* Contagem + reset */
 .picker-count-row { display: flex; align-items: center; justify-content: space-between; padding: 2px 16px 6px; }
@@ -691,7 +691,8 @@ body {
 .current-tag { background: var(--primary); color: white; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; }
 .adapted-tag-sm { font-size: 13px; }
 .picker-item-meta { display: flex; gap: 10px; font-size: 11px; color: var(--text2); margin-bottom: 4px; flex-wrap: wrap; }
-.picker-cat-badge { font-weight: 700; }
+/* Categoria nos items da lista — apenas texto colorido, sem fundo */
+.picker-cat-badge { font-size: 11px; font-weight: 700; }
 .picker-bpm, .picker-duration { color: var(--text3); }
 .picker-muscles { display: flex; gap: 4px; flex-wrap: wrap; }
 .muscle-tag-sm { background: var(--bg3); border: 1px solid var(--border); padding: 2px 8px; border-radius: 10px; font-size: 10px; color: var(--text2); }
@@ -1076,11 +1077,12 @@ body {
 .weekly-view { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 12px 12px; margin-bottom: 12px; }
 .weekly-title { font-size: 13px; font-weight: 700; color: var(--text2); margin-bottom: 10px; }
 .weekly-days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
-.weekly-day { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 8px 2px; border: 1.5px solid var(--border); border-radius: 10px; background: var(--bg2); cursor: pointer; transition: all 0.15s; position: relative; }
+.weekly-day { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 8px 2px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg2); cursor: pointer; transition: background 0.15s; position: relative; }
 .weekly-day:hover:not(.future) { background: var(--bg3); }
-.weekly-day.today { background: var(--bg3); font-weight: 700; }
-.weekly-day.done { background: #10B98118; border-color: #10B98155; }
-.weekly-day.future { opacity: 0.45; cursor: default; }
+.weekly-day.today { border-color: var(--primary); background: var(--primary)18; }
+.weekly-day.done { background: var(--bg3); }
+.weekly-day.done .weekly-icon { font-size: 14px; }
+.weekly-day.future { opacity: 0.4; cursor: default; }
 .weekly-label { font-size: 9px; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: 0.04em; }
 .weekly-icon { font-size: 18px; line-height: 1; }
 .weekly-today-dot { position: absolute; bottom: 3px; width: 4px; height: 4px; border-radius: 50%; }

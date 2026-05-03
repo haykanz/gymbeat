@@ -1,35 +1,6 @@
 // ── Modal de detalhes do exercício ───────────────────────────────────────────
-// Usado no FreeWorkoutBuilder e WorkoutSession pickers
-
-const CATEGORY_LABELS = {
-  abs:         { label: 'Abdômen',   emoji: '🎯', color: '#F97316' },
-  chest:       { label: 'Peito',     emoji: '🫁', color: '#EC4899' },
-  back:        { label: 'Costas',    emoji: '🔙', color: '#14B8A6' },
-  shoulders:   { label: 'Ombros',    emoji: '🏔️', color: '#6366F1' },
-  arms:        { label: 'Braços',    emoji: '💪', color: '#A855F7' },
-  legs:        { label: 'Pernas',    emoji: '🦵', color: '#3B82F6' },
-  glutes:      { label: 'Glúteos',   emoji: '🍑', color: '#F43F5E' },
-  cardio:      { label: 'Cardio',    emoji: '🏃', color: '#F59E0B' },
-  strength:    { label: 'Força',     emoji: '🏋️', color: '#8B5CF6' },
-  hiit:        { label: 'HIIT',      emoji: '🔥', color: '#EF4444' },
-  flexibility: { label: 'Flex.',     emoji: '🧘', color: '#06B6D4' },
-  adapted:     { label: 'Adaptado',  emoji: '✅', color: '#10B981' },
-};
-
-const EQ_LABELS = {
-  peso_corporal:  { label: 'Corpo Livre', emoji: '🏠' },
-  banco:          { label: 'Banco',       emoji: '🪑' },
-  paralelas:      { label: 'Paralelas',   emoji: '⊧'  },
-  barra_fixa:     { label: 'Barra Fixa',  emoji: '🔝' },
-  haltere:        { label: 'Haltere',     emoji: '🏋️' },
-  kettlebell:     { label: 'Kettlebell',  emoji: '⚫' },
-  barra:          { label: 'Barra',       emoji: '🔩' },
-  smith:          { label: 'Smith',       emoji: '🔩' },
-  maquina:        { label: 'Máquina',     emoji: '🖥️' },
-  cabo:           { label: 'Cabo',        emoji: '🔗' },
-  elastico:       { label: 'Elástico',    emoji: '🎀' },
-  roda_abdominal: { label: 'Roda Abd.',   emoji: '⚙️' },
-};
+import { CATEGORY_LABELS, EQ_BADGE as EQ_BADGE_MAP } from '../data/categories';
+const EQ_LABELS = Object.fromEntries(Object.entries(EQ_BADGE_MAP).map(([k, v]) => [k, { label: v }]));
 
 const DIFFICULTY = (bpmMax) => {
   if (bpmMax >= 160) return { label: 'Avançado',    emoji: '🔴', color: '#EF4444' };
@@ -61,7 +32,7 @@ export default function ExerciseDetailModal({ ex, onClose, onAction, actionLabel
               </span>
               {eqInfo && (
                 <span className="detail-badge detail-badge-eq">
-                  {eqInfo.emoji} {eqInfo.label}
+                  {eqInfo.label}
                 </span>
               )}
               <span className="detail-badge" style={{ color: diff.color, background: diff.color + '22', border: `1px solid ${diff.color}44` }}>
