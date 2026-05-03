@@ -173,6 +173,16 @@ export default function Dashboard({ user, onStartWorkout, onCreatePlan, onLogout
               </div>
             )}
 
+            {/* Semana */}
+            {hasPlan && (
+              <WeeklyPlanView
+                plan={plans[0]}
+                userId={user.id}
+                todayIdx={todayDayIdx}
+                onStartWorkout={(day) => onStartWorkout(day, profile)}
+              />
+            )}
+
             {/* Conquistas */}
             <button className="free-workout-btn achievements-btn" onClick={onOpenAchievements}>
               <span className="fw-icon">🏅</span>
@@ -578,6 +588,52 @@ function ExerciseProgressCard({ ex }) {
       <div className="evo-card-footer">
         <span>🔁 {n} registro{n !== 1 ? 's' : ''}</span>
         <span>Último: {last.weight}kg × {last.reps}r · {new Date(last.date).toLocaleDateString('pt-BR')}</span>
+      </div>
+    </div>
+  );
+}
+
+// ── Visualização semanal ──────────────────────────────────────────────────
+function WeeklyPlanView({ plan, userId, todayIdx, onStartWorkout }) {
+  const DAY_LABELS = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
+
+  const completedDays = useMemo(() => {
+    const history = JSON.parse(localStorage.getItem(`gym_history_${userId}`) || '[]');
+    const today   = new Date();
+    const monday  = new Date(today);
+    monday.setDate(today.getDate() - todayIdx);
+    monday.setHours(0, 0, 0, 0);
+    const set = new Set();
+    history.forEach(h => {
+      const d = new Date(h.date);
+      if (d >= monday) set.add((d.getDay() + 6) % 7);
+    });
+    return set;
+  }, [userId, todayIdx]);
+
+  return (
+    <div className="weekly-view">
+      <h4 className="weekly-title">📅 Esta Semana</h4>
+      <div className="weekly-days">
+        {DAY_LABELS.map((label, i) => {
+          const planDay  = plan.days[i % plan.days.length];
+          const catInfo  = CAT_INFO[planDay?.category] || { emoji: '🏋️', color: '#6C3AFF', label: '—' };
+          const done     = completedDays.has(i);
+          const isToday  = i === todayIdx;
+          const isFuture = i > todayIdx;
+          return (
+            <button key={i}
+              className={`weekly-day ${isToday ? 'today' : ''} ${done ? 'done' : ''} ${isFuture ? 'future' : ''}`}
+              style={isToday ? { borderColor: catInfo.color, background: catInfo.color + '18' } : {}}
+              onClick={() => !isFuture && planDay && onStartWorkout(planDay)}
+              title={`${label}: ${catInfo.label}`}
+            >
+              <span className="weekly-label">{label}</span>
+              <span className="weekly-icon">{done ? '✅' : catInfo.emoji}</span>
+              {isToday && <span className="weekly-today-dot" style={{ background: catInfo.color }} />}
+            </button>
+          );
+        })}
       </div>
     </div>
   );

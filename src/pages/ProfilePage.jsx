@@ -29,6 +29,13 @@ export default function ProfilePage({ user, onBack, onLogout, onUpdateUser, onRe
   const [weightInput, setWeightInput] = useState('');
   const [weightSaved, setWeightSaved] = useState(false);
 
+  // Macros
+  const [macroHeight, setMacroHeight] = useState(() => localStorage.getItem(`gym_macro_height_${user.id}`) || '');
+  const [macroAge,    setMacroAge]    = useState(() => localStorage.getItem(`gym_macro_age_${user.id}`) || '');
+  const [macroGender, setMacroGender] = useState(() => localStorage.getItem(`gym_macro_gender_${user.id}`) || 'm');
+  const [macroActivity, setMacroActivity] = useState(() => localStorage.getItem(`gym_macro_activity_${user.id}`) || '1.55');
+  const [showMacros, setShowMacros]   = useState(false);
+
   const handleSpotifyChange = (genreId, value) => {
     setSpotifyPlaylists(prev => ({ ...prev, [genreId]: value }));
   };
@@ -49,6 +56,35 @@ export default function ProfilePage({ user, onBack, onLogout, onUpdateUser, onRe
     localStorage.setItem(`gym_weight_${user.id}`, JSON.stringify(updated));
     setWeightLog(updated);
   };
+
+  const handleSaveMacroInputs = () => {
+    localStorage.setItem(`gym_macro_height_${user.id}`, macroHeight);
+    localStorage.setItem(`gym_macro_age_${user.id}`, macroAge);
+    localStorage.setItem(`gym_macro_gender_${user.id}`, macroGender);
+    localStorage.setItem(`gym_macro_activity_${user.id}`, macroActivity);
+    setShowMacros(true);
+  };
+
+  const macros = useMemo(() => {
+    const weight = weightLog[0]?.weight;
+    const h = parseFloat(macroHeight);
+    const a = parseInt(macroAge);
+    if (!weight || !h || !a) return null;
+    const act = parseFloat(macroActivity) || 1.55;
+    // Mifflin-St Jeor
+    const bmr = macroGender === 'm'
+      ? 10 * weight + 6.25 * h - 5 * a + 5
+      : 10 * weight + 6.25 * h - 5 * a - 161;
+    const tdee = Math.round(bmr * act);
+    const goal = profile.goal || 'saude-geral';
+    const cal  = goal === 'ganhar-musculo' ? tdee + 300
+              : goal === 'perder-peso'    ? tdee - 500
+              : tdee;
+    const prot = Math.round((goal === 'ganhar-musculo' ? 2.2 : goal === 'perder-peso' ? 2.0 : 1.8) * weight);
+    const fat  = Math.round(weight * 0.9);
+    const carb = Math.round((cal - prot * 4 - fat * 9) / 4);
+    return { cal: Math.max(1200, cal), prot, fat, carb: Math.max(0, carb) };
+  }, [weightLog, macroHeight, macroAge, macroGender, macroActivity, profile.goal]);
 
   const handleSaveSpotify = () => {
     // Normaliza: extrai IDs de URLs completas
@@ -376,6 +412,75 @@ export default function ProfilePage({ user, onBack, onLogout, onUpdateUser, onRe
           </p>
         </div>
 
+        {/* Macros */}
+        <div className="profile-section">
+          <h4 className="section-title">🍽️ Macros Diários</h4>
+          <p className="profile-info-text">Calculamos suas necessidades com base no seu objetivo e peso atual.</p>
+          <div className="macro-inputs">
+            <div className="macro-input-row">
+              <label>Altura</label>
+              <div className="macro-input-wrap">
+                <input type="number" className="macro-input" placeholder="175" min="100" max="250"
+                  value={macroHeight} onChange={e => setMacroHeight(e.target.value)} />
+                <span className="macro-unit">cm</span>
+              </div>
+            </div>
+            <div className="macro-input-row">
+              <label>Idade</label>
+              <div className="macro-input-wrap">
+                <input type="number" className="macro-input" placeholder="25" min="10" max="100"
+                  value={macroAge} onChange={e => setMacroAge(e.target.value)} />
+                <span className="macro-unit">anos</span>
+              </div>
+            </div>
+            <div className="macro-input-row">
+              <label>Sexo</label>
+              <div className="macro-gender-btns">
+                <button className={`macro-gender-btn ${macroGender === 'm' ? 'active' : ''}`}
+                  onClick={() => setMacroGender('m')}>♂ Masc.</button>
+                <button className={`macro-gender-btn ${macroGender === 'f' ? 'active' : ''}`}
+                  onClick={() => setMacroGender('f')}>♀ Fem.</button>
+              </div>
+            </div>
+            <div className="macro-input-row">
+              <label>Nível de atividade</label>
+              <select className="macro-select" value={macroActivity} onChange={e => setMacroActivity(e.target.value)}>
+                <option value="1.2">Sedentário (sem exercício)</option>
+                <option value="1.375">Levemente ativo (1-3×/semana)</option>
+                <option value="1.55">Moderado (3-5×/semana)</option>
+                <option value="1.725">Muito ativo (6-7×/semana)</option>
+                <option value="1.9">Atleta (2× por dia)</option>
+              </select>
+            </div>
+          </div>
+          {!weightLog[0] && (
+            <p className="macro-weight-warn">⚠️ Registre seu peso acima para calcular os macros.</p>
+          )}
+          <button className="btn-primary notif-save-btn" onClick={handleSaveMacroInputs}
+            disabled={!weightLog[0] || !macroHeight || !macroAge}>
+            🧮 Calcular Macros
+          </button>
+
+          {showMacros && macros && (
+            <div className="macro-result">
+              <div className="macro-result-header">
+                <span>Objetivo: <strong>{
+                  ({ 'perder-peso': 'Perder Peso 🔥', 'ganhar-musculo': 'Ganhar Músculo 💪',
+                    'resistencia': 'Resistência 🏃', 'flexibilidade': 'Flexibilidade 🧘',
+                    'saude-geral': 'Saúde Geral ❤️' })[profile.goal] || 'Saúde Geral'
+                }</strong></span>
+                <span className="macro-calories">{macros.cal} kcal/dia</span>
+              </div>
+              <div className="macro-bars">
+                <MacroBar label="Proteína" value={macros.prot} unit="g" color="#6C3AFF" pct={Math.round((macros.prot * 4 / macros.cal) * 100)} />
+                <MacroBar label="Carboidratos" value={macros.carb} unit="g" color="#F59E0B" pct={Math.round((macros.carb * 4 / macros.cal) * 100)} />
+                <MacroBar label="Gorduras" value={macros.fat}  unit="g" color="#EC4899" pct={Math.round((macros.fat * 9 / macros.cal) * 100)} />
+              </div>
+              <p className="macro-note">💡 Valores estimados — consulte um nutricionista para um plano personalizado.</p>
+            </div>
+          )}
+        </div>
+
         {/* Peso Corporal */}
         <div className="profile-section">
           <h4 className="section-title">⚖️ Peso Corporal</h4>
@@ -453,6 +558,21 @@ export default function ProfilePage({ user, onBack, onLogout, onUpdateUser, onRe
           <span>🚪</span>
           <span>Sair da Conta</span>
         </button>
+      </div>
+    </div>
+  );
+}
+
+// ── Barra de macro ───────────────────────────────────────────────────────
+function MacroBar({ label, value, unit, color, pct }) {
+  return (
+    <div className="macro-bar-row">
+      <div className="macro-bar-label-row">
+        <span className="macro-bar-name">{label}</span>
+        <span className="macro-bar-value" style={{ color }}>{value}{unit} <span className="macro-bar-pct">({pct}%)</span></span>
+      </div>
+      <div className="macro-bar-track">
+        <div className="macro-bar-fill" style={{ width: `${pct}%`, background: color }} />
       </div>
     </div>
   );

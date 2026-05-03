@@ -6,6 +6,7 @@ import WorkoutSession from './pages/WorkoutSession';
 import ProfilePage from './pages/ProfilePage';
 import FreeWorkoutBuilder from './pages/FreeWorkoutBuilder';
 import AchievementsPage from './pages/AchievementsPage';
+import OnboardingPage from './pages/OnboardingPage';
 import './App.css';
 
 export default function App() {
@@ -15,9 +16,10 @@ export default function App() {
   });
   const [screen, setScreen] = useState(() => {
     const u = JSON.parse(localStorage.getItem('gym_current_user') || 'null');
+    if (u?.profile) return 'dashboard';
+    if (!localStorage.getItem('gym_onboarded')) return 'onboarding';
     if (!u) return 'auth';
-    if (!u.profile) return 'questionnaire';
-    return 'dashboard';
+    return 'questionnaire';
   });
   const [activeWorkout, setActiveWorkout] = useState(null);
   const [theme, setTheme] = useState(() =>
@@ -97,6 +99,11 @@ export default function App() {
 
   return (
     <div className="app-root" data-theme={theme}>
+      {screen === 'onboarding' && (
+        <div className="screen-enter">
+          <OnboardingPage onFinish={() => setScreen('auth')} />
+        </div>
+      )}
       {screen === 'auth' && (
         <div className="screen-enter">
           <AuthPage onAuth={handleAuth} theme={theme} toggleTheme={toggleTheme} />
