@@ -15,8 +15,7 @@ export default function ProfilePage({ user, onBack, onLogout, onUpdateUser, onRe
   const [notifTime, setNotifTime]   = useState(() => JSON.parse(localStorage.getItem(`gym_notif_${user.id}`) || '{"time":"18:00"}').time || '18:00');
   const [notifSaved, setNotifSaved] = useState(false);
 
-  // Exportar / Importar dados
-  const [importMsg, setImportMsg]   = useState('');
+  const [importMsg, setImportMsg] = useState('');
 
   // Spotify playlists
   const [spotifyPlaylists, setSpotifyPlaylists] = useState(
@@ -30,15 +29,16 @@ export default function ProfilePage({ user, onBack, onLogout, onUpdateUser, onRe
   const [weightSaved, setWeightSaved] = useState(false);
 
   // Macros
-  const [macroHeight, setMacroHeight] = useState(() => localStorage.getItem(`gym_macro_height_${user.id}`) || '');
-  const [macroAge,    setMacroAge]    = useState(() => localStorage.getItem(`gym_macro_age_${user.id}`) || '');
-  const [macroGender, setMacroGender] = useState(() => localStorage.getItem(`gym_macro_gender_${user.id}`) || 'm');
+  const [macroHeight,   setMacroHeight]   = useState(() => localStorage.getItem(`gym_macro_height_${user.id}`) || '');
+  const [macroAge,      setMacroAge]      = useState(() => localStorage.getItem(`gym_macro_age_${user.id}`) || '');
+  const [macroGender,   setMacroGender]   = useState(() => localStorage.getItem(`gym_macro_gender_${user.id}`) || 'm');
   const [macroActivity, setMacroActivity] = useState(() => localStorage.getItem(`gym_macro_activity_${user.id}`) || '1.55');
-  const [showMacros, setShowMacros]   = useState(false);
+  const [showMacros, setShowMacros] = useState(false);
 
   const handleSpotifyChange = (genreId, value) => {
     setSpotifyPlaylists(prev => ({ ...prev, [genreId]: value }));
   };
+
   const handleLogWeight = () => {
     const val = parseFloat(weightInput.replace(',', '.'));
     if (!val || val < 20 || val > 400) return;
@@ -71,7 +71,6 @@ export default function ProfilePage({ user, onBack, onLogout, onUpdateUser, onRe
     const a = parseInt(macroAge);
     if (!weight || !h || !a) return null;
     const act = parseFloat(macroActivity) || 1.55;
-    // Mifflin-St Jeor
     const bmr = macroGender === 'm'
       ? 10 * weight + 6.25 * h - 5 * a + 5
       : 10 * weight + 6.25 * h - 5 * a - 161;
@@ -87,7 +86,6 @@ export default function ProfilePage({ user, onBack, onLogout, onUpdateUser, onRe
   }, [weightLog, macroHeight, macroAge, macroGender, macroActivity, profile.goal]);
 
   const handleSaveSpotify = () => {
-    // Normaliza: extrai IDs de URLs completas
     const normalized = {};
     Object.entries(spotifyPlaylists).forEach(([k, v]) => {
       if (v.trim()) normalized[k] = extractPlaylistId(v.trim());
@@ -138,18 +136,17 @@ export default function ProfilePage({ user, onBack, onLogout, onUpdateUser, onRe
         localStorage.setItem(`gym_history_${user.id}`, JSON.stringify(data.history));
         if (data.plans) localStorage.setItem(`gym_plans_${user.id}`,   JSON.stringify(data.plans));
         if (data.prs)   localStorage.setItem(`gym_prs_${user.id}`,     JSON.stringify(data.prs));
-        setImportMsg('✅ Dados importados com sucesso! Recarregue o app.');
+        setImportMsg('Dados importados com sucesso. Recarregue o app.');
       } catch {
-        setImportMsg('❌ Arquivo inválido. Use um backup gerado pelo GymBeat.');
+        setImportMsg('Arquivo inválido. Use um backup gerado pelo GymBeat.');
       }
     };
     reader.readAsText(file);
   };
 
-  // Estatísticas
-  const history  = JSON.parse(localStorage.getItem(`gym_history_${user.id}`) || '[]');
-  const plans    = JSON.parse(localStorage.getItem(`gym_plans_${user.id}`) || '[]');
-  const prs      = JSON.parse(localStorage.getItem(`gym_prs_${user.id}`) || '{}');
+  const history = JSON.parse(localStorage.getItem(`gym_history_${user.id}`) || '[]');
+  const plans   = JSON.parse(localStorage.getItem(`gym_plans_${user.id}`) || '[]');
+  const prs     = JSON.parse(localStorage.getItem(`gym_prs_${user.id}`) || '{}');
 
   const totalMin = history.reduce((a, h) => a + (h.duration || 0), 0);
   const totalCal = history.reduce((a, h) => a + (h.calories || 0), 0);
@@ -162,15 +159,20 @@ export default function ProfilePage({ user, onBack, onLogout, onUpdateUser, onRe
     .filter(Boolean);
 
   const goalLabels = {
-    'perder-peso':    { label: 'Perder Peso',   emoji: '🔥' },
-    'ganhar-musculo': { label: 'Ganhar Músculo', emoji: '💪' },
-    'resistencia':    { label: 'Resistência',    emoji: '🏃' },
-    'flexibilidade':  { label: 'Flexibilidade',  emoji: '🧘' },
-    'saude-geral':    { label: 'Saúde Geral',    emoji: '❤️' },
+    'perder-peso':    'Perder Peso',
+    'ganhar-musculo': 'Ganhar Músculo',
+    'resistencia':    'Resistência',
+    'flexibilidade':  'Flexibilidade',
+    'saude-geral':    'Saúde Geral',
   };
-  const levelLabels = { beginner: 'Iniciante 🌱', intermediate: 'Intermediário ⚡', advanced: 'Avançado 🏆' };
-  const goal  = goalLabels[profile.goal] || { label: profile.goal || '—', emoji: '🎯' };
-  const level = levelLabels[profile.fitnessLevel] || profile.fitnessLevel || '—';
+  const levelLabels = { beginner: 'Iniciante', intermediate: 'Intermediário', advanced: 'Avançado' };
+  const goalLabel  = goalLabels[profile.goal] || profile.goal || '—';
+  const levelLabel = levelLabels[profile.fitnessLevel] || profile.fitnessLevel || '—';
+
+  const goalGoalText = {
+    'perder-peso': 'Perder Peso', 'ganhar-musculo': 'Ganhar Músculo',
+    'resistencia': 'Resistência', 'flexibilidade': 'Flexibilidade', 'saude-geral': 'Saúde Geral',
+  };
 
   const handleSaveName = () => {
     if (!newName.trim()) return;
@@ -191,7 +193,7 @@ export default function ProfilePage({ user, onBack, onLogout, onUpdateUser, onRe
         <button className="btn-icon" onClick={onBack}>←</button>
         <h2>Meu Perfil</h2>
         <button className="theme-toggle" onClick={toggleTheme} title="Alternar tema">
-          {theme === 'dark' ? '☀️' : '🌙'}
+          {theme === 'dark' ? '○' : '●'}
         </button>
       </header>
 
@@ -218,10 +220,10 @@ export default function ProfilePage({ user, onBack, onLogout, onUpdateUser, onRe
         ) : (
           <div className="profile-name-row">
             <h3 className="profile-name">{user.name}</h3>
-            <button className="profile-edit-btn" onClick={() => setEditingName(true)}>✏️</button>
+            <button className="profile-edit-btn" onClick={() => setEditingName(true)}>editar</button>
           </div>
         )}
-        {nameSaved && <p className="profile-saved-msg">✓ Nome atualizado!</p>}
+        {nameSaved && <p className="profile-saved-msg">✓ Nome atualizado</p>}
         <p className="profile-email">{user.email}</p>
       </div>
 
@@ -249,19 +251,19 @@ export default function ProfilePage({ user, onBack, onLogout, onUpdateUser, onRe
 
         {/* Objetivo e Nível */}
         <div className="profile-section">
-          <h4 className="section-title">🎯 Objetivo & Nível</h4>
+          <h4 className="section-title">Objetivo & Nível</h4>
           <div className="profile-tags">
-            <span className="profile-tag">{goal.emoji} {goal.label}</span>
-            <span className="profile-tag">⚡ {level}</span>
-            {profile.daysPerWeek && <span className="profile-tag">📅 {profile.daysPerWeek}x/semana</span>}
-            {profile.sessionDuration && <span className="profile-tag">⏱ {profile.sessionDuration} min</span>}
+            <span className="profile-tag">{goalLabel}</span>
+            <span className="profile-tag">{levelLabel}</span>
+            {profile.daysPerWeek && <span className="profile-tag">{profile.daysPerWeek}× por semana</span>}
+            {profile.sessionDuration && <span className="profile-tag">{profile.sessionDuration} min/sessão</span>}
           </div>
         </div>
 
         {/* Regiões de foco */}
         {(profile.focusAreas || []).length > 0 && (
           <div className="profile-section">
-            <h4 className="section-title">🎯 Foco</h4>
+            <h4 className="section-title">Foco</h4>
             <div className="profile-tags">
               {profile.focusAreas.map(a => (
                 <span key={a} className="profile-tag">{a}</span>
@@ -272,13 +274,13 @@ export default function ProfilePage({ user, onBack, onLogout, onUpdateUser, onRe
 
         {/* Gêneros musicais */}
         <div className="profile-section">
-          <h4 className="section-title">🎵 Gêneros Musicais</h4>
+          <h4 className="section-title">Gêneros Musicais</h4>
           <div className="profile-tags">
             {userGenres.length > 0
               ? userGenres.map(g => (
                   <span key={g.id} className="profile-genre-tag"
-                    style={{ backgroundColor: g.color + '22', borderColor: g.color, color: g.color }}>
-                    {g.emoji} {g.label}
+                    style={{ backgroundColor: g.color + '18', borderColor: g.color + '55', color: g.color }}>
+                    {g.label}
                   </span>
                 ))
               : <span className="profile-tag-empty">Não configurado</span>
@@ -288,25 +290,25 @@ export default function ProfilePage({ user, onBack, onLogout, onUpdateUser, onRe
 
         {/* Saúde */}
         <div className="profile-section">
-          <h4 className="section-title">🏥 Condições de Saúde</h4>
+          <h4 className="section-title">Condições de Saúde</h4>
           <div className="profile-tags">
             {userHealth.length > 0
               ? userHealth.map(h => (
                   <span key={h.id} className="profile-health-tag"
-                    style={{ backgroundColor: h.color + '22', borderColor: h.color, color: h.color }}>
-                    {h.emoji} {h.label}
+                    style={{ backgroundColor: h.color + '18', borderColor: h.color + '55', color: h.color }}>
+                    {h.label}
                   </span>
                 ))
-              : <span className="profile-tag profile-tag-green">✅ Sem restrições</span>
+              : <span className="profile-tag profile-tag-green">Sem restrições</span>
             }
           </div>
         </div>
 
         {/* Recordes Pessoais */}
         <div className="profile-section">
-          <h4 className="section-title">🏆 Recordes Pessoais</h4>
+          <h4 className="section-title">Recordes Pessoais</h4>
           {prList.length === 0 ? (
-            <p className="profile-empty">Nenhum recorde ainda — complete um treino com registro de carga!</p>
+            <p className="profile-empty">Nenhum recorde ainda — complete um treino com registro de carga.</p>
           ) : (
             <div className="pr-list">
               {prList.map((pr, i) => (
@@ -331,20 +333,20 @@ export default function ProfilePage({ user, onBack, onLogout, onUpdateUser, onRe
 
         {/* Planos */}
         <div className="profile-section">
-          <h4 className="section-title">📋 Planos de Treino</h4>
+          <h4 className="section-title">Planos de Treino</h4>
           <p className="profile-info-text">{plans.length} plano{plans.length !== 1 ? 's' : ''} criado{plans.length !== 1 ? 's' : ''}</p>
         </div>
 
         {/* Notificações */}
         <div className="profile-section">
-          <h4 className="section-title">🔔 Lembretes de Treino</h4>
+          <h4 className="section-title">Lembretes de Treino</h4>
           {notifPerm === 'unsupported' ? (
             <p className="profile-info-text">Seu navegador não suporta notificações.</p>
           ) : notifPerm === 'denied' ? (
-            <p className="notif-denied">🚫 Permissão negada. Habilite nas configurações do navegador.</p>
+            <p className="notif-denied">Permissão negada — habilite nas configurações do navegador.</p>
           ) : notifPerm === 'default' ? (
             <button className="btn-secondary notif-perm-btn" onClick={handleRequestPermission}>
-              🔔 Permitir notificações
+              Permitir notificações
             </button>
           ) : (
             <div className="notif-settings">
@@ -366,7 +368,7 @@ export default function ProfilePage({ user, onBack, onLogout, onUpdateUser, onRe
                 </label>
               )}
               <button className="btn-primary notif-save-btn" onClick={handleSaveNotif}>
-                {notifSaved ? '✓ Salvo!' : 'Salvar'}
+                {notifSaved ? '✓ Salvo' : 'Salvar'}
               </button>
             </div>
           )}
@@ -374,7 +376,7 @@ export default function ProfilePage({ user, onBack, onLogout, onUpdateUser, onRe
 
         {/* Spotify Playlists */}
         <div className="profile-section">
-          <h4 className="section-title">🎵 Playlists do Spotify</h4>
+          <h4 className="section-title">Playlists do Spotify</h4>
           <p className="profile-info-text">
             Cole o link ou ID de uma playlist do Spotify para cada gênero. Deixe em branco para usar o padrão.
           </p>
@@ -386,7 +388,7 @@ export default function ProfilePage({ user, onBack, onLogout, onUpdateUser, onRe
               return (
                 <div key={gId} className="spotify-genre-row">
                   <label className="spotify-genre-label" style={{ color: g.color }}>
-                    {g.emoji} {g.label}
+                    {g.label}
                   </label>
                   <input
                     className="spotify-playlist-input"
@@ -403,18 +405,18 @@ export default function ProfilePage({ user, onBack, onLogout, onUpdateUser, onRe
             )}
             {(profile.musicGenres || []).length > 0 && (
               <button className="btn-primary notif-save-btn" onClick={handleSaveSpotify}>
-                {spotifySaved ? '✓ Salvo!' : '💾 Salvar Playlists'}
+                {spotifySaved ? '✓ Salvo' : 'Salvar Playlists'}
               </button>
             )}
           </div>
           <p className="spotify-hint">
-            💡 Abra o Spotify → clique numa playlist → compartilhar → copiar link
+            Abra o Spotify → clique numa playlist → compartilhar → copiar link
           </p>
         </div>
 
         {/* Macros */}
         <div className="profile-section">
-          <h4 className="section-title">🍽️ Macros Diários</h4>
+          <h4 className="section-title">Macros Diários</h4>
           <p className="profile-info-text">Calculamos suas necessidades com base no seu objetivo e peso atual.</p>
           <div className="macro-inputs">
             <div className="macro-input-row">
@@ -437,9 +439,9 @@ export default function ProfilePage({ user, onBack, onLogout, onUpdateUser, onRe
               <label>Sexo</label>
               <div className="macro-gender-btns">
                 <button className={`macro-gender-btn ${macroGender === 'm' ? 'active' : ''}`}
-                  onClick={() => setMacroGender('m')}>♂ Masc.</button>
+                  onClick={() => setMacroGender('m')}>Masc.</button>
                 <button className={`macro-gender-btn ${macroGender === 'f' ? 'active' : ''}`}
-                  onClick={() => setMacroGender('f')}>♀ Fem.</button>
+                  onClick={() => setMacroGender('f')}>Fem.</button>
               </div>
             </div>
             <div className="macro-input-row">
@@ -454,36 +456,32 @@ export default function ProfilePage({ user, onBack, onLogout, onUpdateUser, onRe
             </div>
           </div>
           {!weightLog[0] && (
-            <p className="macro-weight-warn">⚠️ Registre seu peso acima para calcular os macros.</p>
+            <p className="macro-weight-warn">Registre seu peso abaixo para calcular os macros.</p>
           )}
           <button className="btn-primary notif-save-btn" onClick={handleSaveMacroInputs}
             disabled={!weightLog[0] || !macroHeight || !macroAge}>
-            🧮 Calcular Macros
+            Calcular Macros
           </button>
 
           {showMacros && macros && (
             <div className="macro-result">
               <div className="macro-result-header">
-                <span>Objetivo: <strong>{
-                  ({ 'perder-peso': 'Perder Peso 🔥', 'ganhar-musculo': 'Ganhar Músculo 💪',
-                    'resistencia': 'Resistência 🏃', 'flexibilidade': 'Flexibilidade 🧘',
-                    'saude-geral': 'Saúde Geral ❤️' })[profile.goal] || 'Saúde Geral'
-                }</strong></span>
+                <span>Objetivo: <strong>{goalGoalText[profile.goal] || 'Saúde Geral'}</strong></span>
                 <span className="macro-calories">{macros.cal} kcal/dia</span>
               </div>
               <div className="macro-bars">
-                <MacroBar label="Proteína" value={macros.prot} unit="g" color="#6C3AFF" pct={Math.round((macros.prot * 4 / macros.cal) * 100)} />
-                <MacroBar label="Carboidratos" value={macros.carb} unit="g" color="#F59E0B" pct={Math.round((macros.carb * 4 / macros.cal) * 100)} />
-                <MacroBar label="Gorduras" value={macros.fat}  unit="g" color="#EC4899" pct={Math.round((macros.fat * 9 / macros.cal) * 100)} />
+                <MacroBar label="Proteína"     value={macros.prot} unit="g" color="#6C3AFF" pct={Math.round((macros.prot * 4 / macros.cal) * 100)} />
+                <MacroBar label="Carboidratos" value={macros.carb} unit="g" color={`var(--gold)`} pct={Math.round((macros.carb * 4 / macros.cal) * 100)} />
+                <MacroBar label="Gorduras"     value={macros.fat}  unit="g" color="#EC4899" pct={Math.round((macros.fat * 9 / macros.cal) * 100)} />
               </div>
-              <p className="macro-note">💡 Valores estimados — consulte um nutricionista para um plano personalizado.</p>
+              <p className="macro-note">Valores estimados — consulte um nutricionista para um plano personalizado.</p>
             </div>
           )}
         </div>
 
         {/* Peso Corporal */}
         <div className="profile-section">
-          <h4 className="section-title">⚖️ Peso Corporal</h4>
+          <h4 className="section-title">Peso Corporal</h4>
           <div className="weight-input-row">
             <input
               className="weight-input"
@@ -526,20 +524,20 @@ export default function ProfilePage({ user, onBack, onLogout, onUpdateUser, onRe
           )}
 
           {weightLog.length === 0 && (
-            <p className="profile-empty">Nenhum registro ainda — registre seu peso para acompanhar a evolução!</p>
+            <p className="profile-empty">Nenhum registro ainda — registre seu peso para acompanhar a evolução.</p>
           )}
         </div>
 
-        {/* Backup / Sincronização */}
+        {/* Backup */}
         <div className="profile-section">
-          <h4 className="section-title">☁️ Backup de Dados</h4>
+          <h4 className="section-title">Backup de Dados</h4>
           <p className="profile-info-text">Exporte seus treinos, planos e recordes para um arquivo JSON.</p>
           <div className="backup-actions">
             <button className="btn-secondary" onClick={handleExport}>
-              📤 Exportar backup
+              Exportar backup
             </button>
             <label className="btn-secondary backup-import-label">
-              📥 Importar backup
+              Importar backup
               <input type="file" accept=".json" onChange={handleImport} style={{ display: 'none' }} />
             </label>
           </div>
@@ -551,11 +549,9 @@ export default function ProfilePage({ user, onBack, onLogout, onUpdateUser, onRe
       {/* Ações */}
       <div className="profile-actions" id="profile-actions-bottom">
         <button className="profile-action-btn" onClick={onRedoQuestionnaire}>
-          <span>🔄</span>
           <span>Refazer Questionário</span>
         </button>
         <button className="profile-action-btn profile-action-danger" onClick={onLogout}>
-          <span>🚪</span>
           <span>Sair da Conta</span>
         </button>
       </div>
@@ -619,7 +615,7 @@ function WeightChart({ log }) {
           textAnchor="middle" fontWeight="bold">{vals[n-1]}kg</text>
       </svg>
       <div className="weight-chart-summary">
-        <span>📊 {n} registros</span>
+        <span>{n} registros</span>
         <span style={{ color: isDown ? '#10B981' : '#EF4444', fontWeight: 700 }}>
           {vals[n-1] - vals[0] > 0 ? '+' : ''}{(vals[n-1] - vals[0]).toFixed(1)} kg total
         </span>

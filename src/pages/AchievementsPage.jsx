@@ -11,7 +11,6 @@ export default function AchievementsPage({ user, onBack, theme, toggleTheme }) {
   const plans   = useMemo(() => JSON.parse(localStorage.getItem(`gym_plans_${user.id}`)   || '[]'), [user.id]);
   const prs     = useMemo(() => JSON.parse(localStorage.getItem(`gym_prs_${user.id}`)     || '{}'), [user.id]);
 
-  // Calcular streak
   const streak = useMemo(() => {
     if (!history.length) return 0;
     const dates = [...new Set(history.map(h => h.date))].sort().reverse();
@@ -30,7 +29,6 @@ export default function AchievementsPage({ user, onBack, theme, toggleTheme }) {
 
   const context = { history, plans, prs, streak };
 
-  // Separa desbloqueadas vs bloqueadas
   const unlockedList = achievements
     .filter(a => unlocked[a.id])
     .map(a => ({ ...a, unlockedAt: unlocked[a.id].unlockedAt }))
@@ -39,7 +37,6 @@ export default function AchievementsPage({ user, onBack, theme, toggleTheme }) {
   const lockedList = achievements
     .filter(a => !unlocked[a.id])
     .map(a => {
-      // Progresso parcial para algumas conquistas
       let progress = null;
       if (a.id === 'strong-start')    progress = { cur: history.length, max: 5 };
       if (a.id === 'dedicated')       progress = { cur: history.length, max: 30 };
@@ -59,7 +56,7 @@ export default function AchievementsPage({ user, onBack, theme, toggleTheme }) {
         <button className="btn-icon" onClick={onBack}>←</button>
         <h2>Conquistas</h2>
         <button className="theme-toggle" onClick={toggleTheme} title="Alternar tema">
-          {theme === 'dark' ? '☀️' : '🌙'}
+          {theme === 'dark' ? '○' : '●'}
         </button>
       </header>
 
@@ -78,20 +75,23 @@ export default function AchievementsPage({ user, onBack, theme, toggleTheme }) {
       {/* Desbloqueadas */}
       {unlockedList.length > 0 && (
         <section className="ach-section">
-          <h3 className="ach-section-title">✅ Desbloqueadas ({unlockedList.length})</h3>
+          <h3 className="ach-section-title">Desbloqueadas <span className="ach-section-count">{unlockedList.length}</span></h3>
           <div className="ach-grid">
             {unlockedList.map(ach => {
               const r = rarityConfig[ach.rarity];
               return (
                 <div key={ach.id} className="ach-card ach-unlocked"
-                  style={{ borderColor: r.color, background: r.bg }}>
-                  <span className="ach-emoji">{ach.emoji}</span>
+                  style={{ borderColor: r.color + '55', background: r.bg }}>
+                  {/* Rarity badge — CSS only, no emoji */}
+                  <div className="ach-badge" style={{ borderColor: r.color, color: r.color }}>
+                    {ach.title.charAt(0).toUpperCase()}
+                  </div>
                   <div className="ach-info">
                     <p className="ach-title">{ach.title}</p>
                     <p className="ach-desc">{ach.desc}</p>
                     <span className="ach-rarity" style={{ color: r.color }}>{r.label}</span>
                   </div>
-                  <span className="ach-check">✓</span>
+                  <span className="ach-check" style={{ borderColor: r.color, color: r.color }}>✓</span>
                 </div>
               );
             })}
@@ -101,13 +101,15 @@ export default function AchievementsPage({ user, onBack, theme, toggleTheme }) {
 
       {/* Bloqueadas */}
       <section className="ach-section">
-        <h3 className="ach-section-title">🔒 Bloqueadas ({lockedList.length})</h3>
+        <h3 className="ach-section-title">Bloqueadas <span className="ach-section-count">{lockedList.length}</span></h3>
         <div className="ach-grid">
           {lockedList.map(ach => {
             const r = rarityConfig[ach.rarity];
             return (
               <div key={ach.id} className="ach-card ach-locked">
-                <span className="ach-emoji ach-emoji-locked">{ach.emoji}</span>
+                <div className="ach-badge ach-badge-locked">
+                  —
+                </div>
                 <div className="ach-info">
                   <p className="ach-title">{ach.title}</p>
                   <p className="ach-desc">{ach.desc}</p>
@@ -116,7 +118,7 @@ export default function AchievementsPage({ user, onBack, theme, toggleTheme }) {
                     <div className="ach-progress-wrap">
                       <div className="ach-progress-bar">
                         <div className="ach-progress-fill"
-                          style={{ width: `${Math.min(100, (ach.progress.cur / ach.progress.max) * 100)}%` }} />
+                          style={{ width: `${Math.min(100, (ach.progress.cur / ach.progress.max) * 100)}%`, background: r.color }} />
                       </div>
                       <span className="ach-progress-label">
                         {Math.min(ach.progress.cur, ach.progress.max)}/{ach.progress.max}

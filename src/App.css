@@ -525,7 +525,11 @@ body {
 .ps-label { font-size: 10px; color: var(--text2); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
 .profile-sections { padding: 16px 20px; display: flex; flex-direction: column; gap: 12px; }
 .profile-section { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; display: flex; flex-direction: column; gap: 10px; }
-.section-title { font-size: 13px; font-weight: 700; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; }
+.section-title {
+  font-size: 11px; font-weight: 700; color: var(--text2);
+  text-transform: uppercase; letter-spacing: 0.1em;
+  border-left: 2px solid var(--primary); padding-left: 8px;
+}
 .profile-tags { display: flex; flex-wrap: wrap; gap: 8px; }
 .profile-tag { background: var(--bg3); border: 1px solid var(--border); padding: 6px 12px; border-radius: 20px; font-size: 13px; color: var(--text); font-weight: 600; }
 .profile-tag-green { border-color: #10B981; color: #10B981; background: rgba(16,185,129,0.1); }
@@ -997,9 +1001,17 @@ body {
 .ach-pct { font-size: 13px; color: var(--text2); }
 
 .ach-section { padding: 0 16px 8px; }
-.ach-section-title { font-size: 15px; font-weight: 700; margin-bottom: 12px; color: var(--text2); }
+.ach-section-title {
+  font-size: 12px; font-weight: 700; margin-bottom: 12px;
+  color: var(--text2); text-transform: uppercase; letter-spacing: 0.08em;
+  display: flex; align-items: center; gap: 8px;
+}
+.ach-section-count {
+  background: var(--bg3); border: 1px solid var(--border);
+  color: var(--text2); font-size: 11px; padding: 1px 7px; border-radius: 20px;
+}
 
-.ach-grid { display: flex; flex-direction: column; gap: 10px; }
+.ach-grid { display: flex; flex-direction: column; gap: 8px; }
 
 .ach-card {
   display: flex;
@@ -1011,16 +1023,30 @@ body {
   background: var(--card);
   transition: transform 0.15s;
 }
-.ach-unlocked { box-shadow: 0 2px 12px rgba(108,58,255,0.15); }
-.ach-locked { opacity: 0.55; }
+.ach-unlocked { box-shadow: 0 1px 8px rgba(0,0,0,0.3); }
+.ach-locked { opacity: 0.5; }
 
-.ach-emoji { font-size: 32px; flex-shrink: 0; }
-.ach-emoji-locked { filter: grayscale(1); }
+/* Rarity badge — letter in a circle, no emoji */
+.ach-badge {
+  width: 40px; height: 40px; border-radius: 50%;
+  border: 2px solid; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; font-weight: 800;
+}
+.ach-badge-locked {
+  border-color: var(--border) !important;
+  color: var(--text3) !important;
+  background: var(--bg3);
+}
 .ach-info { flex: 1; min-width: 0; }
 .ach-title { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
 .ach-desc  { font-size: 12px; color: var(--text2); margin-bottom: 4px; }
-.ach-rarity { font-size: 11px; font-weight: 700; }
-.ach-check { font-size: 20px; color: #10B981; flex-shrink: 0; }
+.ach-rarity { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
+.ach-check {
+  width: 24px; height: 24px; border-radius: 50%; border: 1.5px solid;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; flex-shrink: 0;
+}
 
 .ach-progress-wrap { display: flex; align-items: center; gap: 8px; margin-top: 6px; }
 .ach-progress-bar { flex: 1; background: var(--bg3); border-radius: 4px; height: 6px; overflow: hidden; }
