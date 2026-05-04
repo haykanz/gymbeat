@@ -9,11 +9,11 @@ const steps = [
     subtitle: 'Escolha o que mais combina com você',
     type: 'single',
     options: [
-      { value: 'perder-peso',   label: 'Perder Peso',   emoji: '🔥', desc: 'Queimar gordura e emagrecer' },
-      { value: 'ganhar-musculo',label: 'Ganhar Músculo', emoji: '💪', desc: 'Hipertrofia e definição' },
-      { value: 'resistencia',   label: 'Resistência',   emoji: '🏃', desc: 'Melhorar condicionamento' },
-      { value: 'flexibilidade', label: 'Flexibilidade', emoji: '🧘', desc: 'Alongamento e mobilidade' },
-      { value: 'saude-geral',   label: 'Saúde Geral',   emoji: '❤️', desc: 'Qualidade de vida' },
+      { value: 'perder-peso',    label: 'Perder Peso',    desc: 'Queimar gordura e emagrecer' },
+      { value: 'ganhar-musculo', label: 'Ganhar Músculo', desc: 'Hipertrofia e definição' },
+      { value: 'resistencia',    label: 'Resistência',    desc: 'Melhorar condicionamento' },
+      { value: 'flexibilidade',  label: 'Flexibilidade',  desc: 'Alongamento e mobilidade' },
+      { value: 'saude-geral',    label: 'Saúde Geral',    desc: 'Qualidade de vida' },
     ],
   },
   {
@@ -22,18 +22,18 @@ const steps = [
     subtitle: 'Seja honesto — vamos criar o plano ideal',
     type: 'single',
     options: [
-      { value: 'beginner',     label: 'Iniciante',     emoji: '🌱', desc: 'Começo agora ou voltei recentemente' },
-      { value: 'intermediate', label: 'Intermediário', emoji: '⚡', desc: 'Treino há 6+ meses com regularidade' },
-      { value: 'advanced',     label: 'Avançado',      emoji: '🏆', desc: 'Treino há anos, rotina sólida' },
+      { value: 'beginner',     label: 'Iniciante',     desc: 'Começo agora ou voltei recentemente' },
+      { value: 'intermediate', label: 'Intermediário', desc: 'Treino há 6+ meses com regularidade' },
+      { value: 'advanced',     label: 'Avançado',      desc: 'Treino há anos, rotina sólida' },
     ],
   },
   {
     id: 'healthConditions',
     title: 'Você tem algum problema de saúde?',
-    subtitle: 'Seja honesto — seu treino será adaptado automaticamente',
-    type: 'health',  // tipo especial com lógica de "nenhum" exclusivo
+    subtitle: 'Seu treino será adaptado automaticamente para sua condição',
+    type: 'health',
     options: healthConditions.map(h => ({
-      value: h.id, label: h.label, emoji: h.emoji, desc: h.desc, color: h.color,
+      value: h.id, label: h.label, desc: h.desc, color: h.color,
     })),
   },
   {
@@ -42,10 +42,10 @@ const steps = [
     subtitle: 'Seja realista com sua agenda',
     type: 'single',
     options: [
-      { value: '2', label: '2 dias', emoji: '📅', desc: 'Final de semana ou 2× na semana' },
-      { value: '3', label: '3 dias', emoji: '📅', desc: 'Clássico e eficiente' },
-      { value: '4', label: '4 dias', emoji: '📅', desc: 'Comprometido com resultados' },
-      { value: '5', label: '5 dias', emoji: '📅', desc: 'Alta frequência de treino' },
+      { value: '2', label: '2 dias', desc: 'Final de semana ou 2× na semana' },
+      { value: '3', label: '3 dias', desc: 'Clássico e eficiente' },
+      { value: '4', label: '4 dias', desc: 'Comprometido com resultados' },
+      { value: '5', label: '5 dias', desc: 'Alta frequência de treino' },
     ],
   },
   {
@@ -54,7 +54,7 @@ const steps = [
     subtitle: 'Escolha até 3 gêneros favoritos',
     type: 'multiple',
     max: 3,
-    options: musicGenres.map(g => ({ value: g.id, label: g.label, emoji: g.emoji, color: g.color })),
+    options: musicGenres.map(g => ({ value: g.id, label: g.label, color: g.color })),
   },
   {
     id: 'sessionDuration',
@@ -62,10 +62,10 @@ const steps = [
     subtitle: 'Vamos otimizar os exercícios para esse tempo',
     type: 'single',
     options: [
-      { value: '20', label: '20 min', emoji: '⚡', desc: 'Treino rápido e intenso' },
-      { value: '30', label: '30 min', emoji: '🕐', desc: 'Equilibrado e eficaz' },
-      { value: '45', label: '45 min', emoji: '🕒', desc: 'Completo e detalhado' },
-      { value: '60', label: '60 min', emoji: '🕐', desc: 'Treino extenso e aprofundado' },
+      { value: '20', label: '20 min', desc: 'Treino rápido e intenso' },
+      { value: '30', label: '30 min', desc: 'Equilibrado e eficaz' },
+      { value: '45', label: '45 min', desc: 'Completo e detalhado' },
+      { value: '60', label: '60 min', desc: 'Treino extenso e aprofundado' },
     ],
   },
   {
@@ -75,12 +75,12 @@ const steps = [
     type: 'multiple',
     max: 3,
     options: [
-      { value: 'peito',   label: 'Peito',   emoji: '🫁', desc: 'Peitoral e ombros' },
-      { value: 'costas',  label: 'Costas',  emoji: '🔙', desc: 'Dorsal e lombar' },
-      { value: 'pernas',  label: 'Pernas',  emoji: '🦵', desc: 'Quadríceps e isquiotibiais' },
-      { value: 'gluteos', label: 'Glúteos', emoji: '🍑', desc: 'Bumbum em alta' },
-      { value: 'barriga', label: 'Barriga', emoji: '🎯', desc: 'Core e abdômen' },
-      { value: 'braco',   label: 'Braços',  emoji: '💪', desc: 'Bíceps e tríceps' },
+      { value: 'peito',   label: 'Peito',   desc: 'Peitoral e ombros' },
+      { value: 'costas',  label: 'Costas',  desc: 'Dorsal e lombar' },
+      { value: 'pernas',  label: 'Pernas',  desc: 'Quadríceps e isquiotibiais' },
+      { value: 'gluteos', label: 'Glúteos', desc: 'Glúteos e posteriores' },
+      { value: 'barriga', label: 'Abdômen', desc: 'Core e abdômen' },
+      { value: 'braco',   label: 'Braços',  desc: 'Bíceps e tríceps' },
     ],
   },
 ];
@@ -90,14 +90,12 @@ export default function QuestionnairePage({ user, onComplete }) {
   const [answers, setAnswers] = useState({ healthConditions: ['nenhum'] });
   const step = steps[currentStep];
 
-  // ── Seleção de saúde: "Nenhum" é exclusivo ────────────────────────────────
   const handleHealthSelect = (value) => {
     const current = answers.healthConditions || ['nenhum'];
     if (value === 'nenhum') {
       setAnswers({ ...answers, healthConditions: ['nenhum'] });
       return;
     }
-    // Remove 'nenhum' ao selecionar qualquer condição
     const withoutNone = current.filter(v => v !== 'nenhum');
     if (withoutNone.includes(value)) {
       const next = withoutNone.filter(v => v !== value);
@@ -160,17 +158,16 @@ export default function QuestionnairePage({ user, onComplete }) {
 
       <div className="quest-content">
         <div className="quest-title-block">
-          {isHealthStep && <span className="quest-health-icon">🏥</span>}
           <h2>{step.title}</h2>
           <p>{step.subtitle}</p>
           {step.type === 'multiple' && (
             <span className="quest-multi-hint">
-              Selecione até {step.max} opções ({(answers[step.id] || []).length}/{step.max})
+              {(answers[step.id] || []).length} / {step.max} selecionados
             </span>
           )}
           {isHealthStep && (
             <div className="quest-health-note">
-              <span>🔒</span>
+              <span className="quest-health-lock">—</span>
               <span>Informação confidencial — usada apenas para personalizar seu treino</span>
             </div>
           )}
@@ -182,17 +179,24 @@ export default function QuestionnairePage({ user, onComplete }) {
         }`}>
           {step.options.map(opt => {
             const selected = isSelected(opt.value);
+            const accentColor = opt.color || 'var(--primary)';
             return (
               <button
                 key={opt.value}
                 className={`quest-option ${selected ? 'selected' : ''} ${opt.value === 'nenhum' ? 'opt-none' : ''}`}
                 onClick={() => handleSelect(opt.value)}
-                style={selected && opt.color ? { borderColor: opt.color, backgroundColor: opt.color + '22' } : {}}
+                style={selected ? {
+                  borderColor: accentColor,
+                  backgroundColor: accentColor + '18',
+                } : {}}
               >
-                <span className="opt-emoji">{opt.emoji}</span>
+                {/* Color accent bar — left edge */}
+                <span className="opt-bar" style={{ background: selected ? accentColor : 'transparent' }} />
                 <span className="opt-label">{opt.label}</span>
                 {opt.desc && <span className="opt-desc">{opt.desc}</span>}
-                {selected && <span className="opt-check" style={opt.color ? { backgroundColor: opt.color } : {}}>✓</span>}
+                {selected && (
+                  <span className="opt-check" style={{ background: accentColor }}>✓</span>
+                )}
               </button>
             );
           })}
@@ -200,7 +204,7 @@ export default function QuestionnairePage({ user, onComplete }) {
 
         {hasRestrictions && (
           <div className="quest-health-warning">
-            <span>⚠️</span>
+            <span className="quest-warn-bar" />
             <p>Seu plano de treino será <strong>automaticamente adaptado</strong> para as condições selecionadas. Exercícios inadequados serão substituídos por alternativas seguras.</p>
           </div>
         )}
@@ -212,7 +216,7 @@ export default function QuestionnairePage({ user, onComplete }) {
             </button>
           )}
           <button className="btn-primary" onClick={handleNext} disabled={!canNext()}>
-            {currentStep === steps.length - 1 ? '🚀 Criar Meu Plano' : 'Próximo →'}
+            {currentStep === steps.length - 1 ? 'Criar Meu Plano' : 'Próximo →'}
           </button>
         </div>
       </div>

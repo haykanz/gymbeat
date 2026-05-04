@@ -42,7 +42,10 @@ export default function AuthPage({ onAuth }) {
     <div className="auth-page">
       <div className="auth-card">
         <div className="auth-logo">
-          <span className="logo-icon">🎵</span>
+          {/* Logo mark — two vertical bars (beat/rhythm motif) */}
+          <div className="auth-logo-mark">
+            <span /><span /><span /><span /><span />
+          </div>
           <h1>GymBeat</h1>
           <p>Treino no ritmo certo</p>
         </div>

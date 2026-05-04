@@ -141,9 +141,22 @@ body {
   text-align: center;
   margin-bottom: 32px;
 }
-.logo-icon { font-size: 48px; display: block; margin-bottom: 8px; }
-.auth-logo h1 { font-size: 32px; font-weight: 800; background: linear-gradient(135deg, #6C3AFF, #FF6B35); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-.auth-logo p { color: var(--text2); margin-top: 4px; }
+/* Beat-bars logo mark — no emoji */
+.auth-logo-mark {
+  display: flex; align-items: flex-end; justify-content: center;
+  gap: 4px; height: 40px; margin-bottom: 14px;
+}
+.auth-logo-mark span {
+  display: block; width: 5px; border-radius: 3px;
+  background: var(--primary);
+}
+.auth-logo-mark span:nth-child(1) { height: 18px; opacity: 0.45; }
+.auth-logo-mark span:nth-child(2) { height: 32px; opacity: 0.7; }
+.auth-logo-mark span:nth-child(3) { height: 40px; opacity: 1; }
+.auth-logo-mark span:nth-child(4) { height: 26px; opacity: 0.7; }
+.auth-logo-mark span:nth-child(5) { height: 14px; opacity: 0.45; }
+.auth-logo h1 { font-size: 28px; font-weight: 800; letter-spacing: -0.5px; color: var(--text); }
+.auth-logo p { color: var(--text2); margin-top: 4px; font-size: 13px; letter-spacing: 0.05em; text-transform: uppercase; }
 
 .auth-tabs { display: flex; gap: 4px; background: var(--bg3); padding: 4px; border-radius: var(--radius); margin-bottom: 28px; }
 .tab { flex: 1; padding: 10px; border: none; background: transparent; color: var(--text2); border-radius: var(--radius-sm); font-size: 15px; cursor: pointer; font-weight: 600; transition: all 0.2s; }
@@ -169,7 +182,7 @@ body {
 
 .quest-header { margin-bottom: 24px; }
 .quest-progress-bar { background: var(--bg3); height: 6px; border-radius: 3px; overflow: hidden; }
-.quest-progress-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--accent)); border-radius: 3px; transition: width 0.4s ease; }
+.quest-progress-fill { height: 100%; background: var(--primary); border-radius: 3px; transition: width 0.4s ease; }
 .quest-step-label { color: var(--text3); font-size: 13px; margin-top: 8px; text-align: center; }
 
 .quest-content { flex: 1; display: flex; flex-direction: column; max-width: 600px; margin: 0 auto; width: 100%; }
@@ -188,25 +201,37 @@ body {
 
 .quest-option {
   background: var(--card);
-  border: 2px solid var(--border);
+  border: 1px solid var(--border);
   color: var(--text);
-  padding: 16px 12px;
-  border-radius: var(--radius);
+  padding: 14px 14px 14px 10px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
-  text-align: center;
-  transition: all 0.2s;
+  text-align: left;
+  transition: all 0.18s;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 6px;
+  align-items: flex-start;
+  gap: 4px;
   position: relative;
+  overflow: hidden;
 }
 .quest-option:hover { border-color: var(--primary); background: var(--bg3); }
-.quest-option.selected { border-color: var(--primary); background: rgba(108,58,255,0.15); }
-.opt-emoji { font-size: 28px; }
-.opt-label { font-size: 14px; font-weight: 700; }
-.opt-desc { font-size: 12px; color: var(--text2); }
-.opt-check { position: absolute; top: 8px; right: 8px; background: var(--primary); color: white; width: 20px; height: 20px; border-radius: 50%; font-size: 12px; display: flex; align-items: center; justify-content: center; }
+.quest-option.selected { border-width: 1.5px; }
+/* Left accent bar */
+.opt-bar {
+  position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+  border-radius: 2px 0 0 2px;
+  transition: background 0.18s;
+}
+.opt-label { font-size: 14px; font-weight: 700; padding-left: 10px; }
+.opt-desc  { font-size: 12px; color: var(--text2); padding-left: 10px; line-height: 1.4; }
+.opt-check {
+  position: absolute; top: 8px; right: 8px;
+  color: white; width: 18px; height: 18px; border-radius: 50%;
+  font-size: 11px; display: flex; align-items: center; justify-content: center;
+}
+/* "Nenhum" option spans full width */
+.quest-options .opt-none { grid-column: 1 / -1; }
 
 .quest-actions { display: flex; gap: 12px; margin-top: 28px; }
 .quest-actions .btn-primary { flex: 1; }
@@ -525,11 +550,22 @@ body {
 .profile-action-danger:hover { background: rgba(239,68,68,0.08); }
 
 /* ─── QUESTIONÁRIO — Saúde ─── */
-.quest-health-icon { font-size: 36px; display: block; margin-bottom: 6px; }
-.quest-health-note { display: flex; align-items: center; gap: 8px; background: rgba(16,185,129,0.12); border: 1px solid #10B981; border-radius: var(--radius-sm); padding: 10px 14px; margin-top: 10px; font-size: 12px; color: #10B981; }
-.quest-health-warning { background: rgba(245,158,11,0.12); border: 1px solid #F59E0B; border-radius: var(--radius); padding: 14px; margin-top: 12px; display: flex; gap: 10px; align-items: flex-start; font-size: 13px; color: #F59E0B; }
-.quest-health-warning p { line-height: 1.5; }
-.quest-health-warning strong { color: var(--text); }
+.quest-health-note {
+  display: flex; align-items: center; gap: 10px;
+  background: rgba(108,58,255,0.08); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 10px 14px;
+  margin-top: 12px; font-size: 12px; color: var(--text2);
+}
+.quest-health-lock { width: 3px; height: 16px; border-radius: 2px; background: var(--primary); flex-shrink: 0; }
+.quest-health-warning {
+  background: rgba(201,168,76,0.08); border-left: 3px solid var(--gold);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: 12px 14px; margin-top: 12px;
+  display: flex; gap: 10px; align-items: flex-start; font-size: 13px; color: var(--text2);
+}
+.quest-warn-bar { width: 0; flex-shrink: 0; }
+.quest-health-warning p { line-height: 1.6; }
+.quest-health-warning strong { color: var(--gold); }
 .quest-options.grid-health { grid-template-columns: 1fr 1fr; }
 @media (min-width: 480px) { .quest-options.grid-health { grid-template-columns: 1fr 1fr 1fr; } }
 .opt-none { border-style: dashed !important; }
