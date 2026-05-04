@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+﻿import { useState, useMemo } from 'react';
 import { musicGenres } from '../data/music';
 import { healthConditions } from '../data/exercises';
 import { DEFAULT_PLAYLISTS, extractPlaylistId } from '../data/spotify';
@@ -470,7 +470,7 @@ export default function ProfilePage({ user, onBack, onLogout, onUpdateUser, onRe
                 <span className="macro-calories">{macros.cal} kcal/dia</span>
               </div>
               <div className="macro-bars">
-                <MacroBar label="Proteína"     value={macros.prot} unit="g" color="#6C3AFF" pct={Math.round((macros.prot * 4 / macros.cal) * 100)} />
+                <MacroBar label="Proteína"     value={macros.prot} unit="g" color="#00C27A" pct={Math.round((macros.prot * 4 / macros.cal) * 100)} />
                 <MacroBar label="Carboidratos" value={macros.carb} unit="g" color={`var(--gold)`} pct={Math.round((macros.carb * 4 / macros.cal) * 100)} />
                 <MacroBar label="Gorduras"     value={macros.fat}  unit="g" color="#EC4899" pct={Math.round((macros.fat * 9 / macros.cal) * 100)} />
               </div>

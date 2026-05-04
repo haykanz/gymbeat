@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+﻿import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { matchTrackToExercise, getBpmMatchLabel, musicGenres, formatDuration } from '../data/music';
 import { exerciseLibrary, healthConditions } from '../data/exercises';
 import { checkNewAchievements } from '../data/achievements';
@@ -638,13 +638,13 @@ export default function WorkoutSession({ workout, userProfile, userId, onFinish 
 
 // ── Filtros de equipamento (shared) ───────────────────────────────────────
 const EQUIPMENT_FILTERS = {
-  all:     { label: 'Todos',    color: '#6C3AFF', match: null },
-  free:    { label: 'Sem Peso', color: '#6C3AFF', match: ['peso_corporal','banco','paralelas','barra_fixa'] },
-  dumbell: { label: 'Haltere',  color: '#6C3AFF', match: ['haltere','kettlebell'] },
-  barbell: { label: 'Barra',    color: '#6C3AFF', match: ['barra','smith'] },
-  machine: { label: 'Máquina',  color: '#6C3AFF', match: ['maquina'] },
-  cable:   { label: 'Cabo',     color: '#6C3AFF', match: ['cabo'] },
-  other:   { label: 'Outros',   color: '#6C3AFF', match: ['elastico','roda_abdominal','kettlebell','bola','faixa'] },
+  all:     { label: 'Todos',    color: '#00C27A', match: null },
+  free:    { label: 'Sem Peso', color: '#00C27A', match: ['peso_corporal','banco','paralelas','barra_fixa'] },
+  dumbell: { label: 'Haltere',  color: '#00C27A', match: ['haltere','kettlebell'] },
+  barbell: { label: 'Barra',    color: '#00C27A', match: ['barra','smith'] },
+  machine: { label: 'Máquina',  color: '#00C27A', match: ['maquina'] },
+  cable:   { label: 'Cabo',     color: '#00C27A', match: ['cabo'] },
+  other:   { label: 'Outros',   color: '#00C27A', match: ['elastico','roda_abdominal','kettlebell','bola','faixa'] },
 };
 
 const EQ_BADGE = {
@@ -734,8 +734,8 @@ function ExercisePicker({ currentEx, restricted, onSelect, onClose, genreInfo })
         <div className="picker-cats">
           {categories.map(cat => {
             const info = cat === 'all'
-              ? { label: 'Todos', color: '#6C3AFF' }
-              : CATEGORY_LABELS[cat] || { label: cat, color: '#6C3AFF' };
+              ? { label: 'Todos', color: '#00C27A' }
+              : CATEGORY_LABELS[cat] || { label: cat, color: '#00C27A' };
             return (
               <button key={cat}
                 className={`cat-chip ${catFilter === cat ? 'active' : ''}`}
@@ -784,7 +784,7 @@ function ExercisePicker({ currentEx, restricted, onSelect, onClose, genreInfo })
             <div className="picker-empty"><p>Nenhum exercício encontrado</p><p>Tente outro termo ou filtro</p></div>
           ) : (
             filtered.map(ex => {
-              const catInfo   = CATEGORY_LABELS[ex.category] || { color: '#6C3AFF', label: ex.category };
+              const catInfo   = CATEGORY_LABELS[ex.category] || { color: '#00C27A', label: ex.category };
               const eqInfo    = EQ_BADGE[ex.equipment] || null;
               const isCurrent = ex.id === currentEx?.id;
               return (

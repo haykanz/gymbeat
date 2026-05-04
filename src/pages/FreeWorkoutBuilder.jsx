@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+﻿import { useState, useMemo } from 'react';
 import { exerciseLibrary, healthConditions } from '../data/exercises';
 import { musicGenres } from '../data/music';
 import ExerciseDetailModal from '../components/ExerciseDetailModal';
@@ -124,7 +124,7 @@ export default function FreeWorkoutBuilder({ userProfile, userId, onStart, onBac
         ) : (
           <div className="fw-exercise-list">
             {exercises.map((ex, i) => {
-              const catInfo = CATEGORY_LABELS[ex.category] || { color: '#6C3AFF', label: ex.category };
+              const catInfo = CATEGORY_LABELS[ex.category] || { color: '#00C27A', label: ex.category };
               const eqInfo  = EQ_BADGE[ex.equipment] || null;
               return (
                 <div key={i} className="fw-ex-item">
@@ -237,8 +237,8 @@ function ExercisePicker({ restricted, alreadyAdded, onSelect, onClose, genreInfo
         <div className="picker-cats">
           {categories.map(cat => {
             const info = cat === 'all'
-              ? { label: 'Todos', color: '#6C3AFF' }
-              : CATEGORY_LABELS[cat] || { label: cat, color: '#6C3AFF' };
+              ? { label: 'Todos', color: '#00C27A' }
+              : CATEGORY_LABELS[cat] || { label: cat, color: '#00C27A' };
             return (
               <button key={cat}
                 className={`cat-chip ${catFilter === cat ? 'active' : ''}`}
@@ -288,7 +288,7 @@ function ExercisePicker({ restricted, alreadyAdded, onSelect, onClose, genreInfo
               <p>Tente mudar os filtros</p>
             </div>
           ) : filtered.map(ex => {
-            const catInfo = CATEGORY_LABELS[ex.category] || { color: '#6C3AFF', label: ex.category };
+            const catInfo = CATEGORY_LABELS[ex.category] || { color: '#00C27A', label: ex.category };
             const eqInfo  = EQ_BADGE[ex.equipment] || null;
             const added   = alreadyAdded.includes(ex.id);
             return (

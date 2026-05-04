@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+﻿import { useState, useMemo } from 'react';
 import { generateWorkoutPlan } from '../data/exercises';
 import { musicGenres } from '../data/music';
 import { CATEGORY_LABELS as CAT_INFO_MAP, CAT_PT } from '../data/categories';
@@ -536,20 +536,20 @@ function ExerciseProgressCard({ ex }) {
         <svg viewBox={`0 0 ${W} ${H}`} className="evo-svg" aria-hidden="true">
           <defs>
             <linearGradient id={`grad-${name}`} x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#6C3AFF" stopOpacity="0.45" />
-              <stop offset="100%" stopColor="#6C3AFF" stopOpacity="0" />
+              <stop offset="0%" stopColor="#00C27A" stopOpacity="0.45" />
+              <stop offset="100%" stopColor="#00C27A" stopOpacity="0" />
             </linearGradient>
           </defs>
           <line x1={PAD} y1={H - PAD} x2={W - PAD} y2={H - PAD} stroke="var(--border)" strokeWidth="1" />
           <polygon points={areaPoints} fill={`url(#grad-${name})`} />
-          <polyline points={polyline} fill="none" stroke="#6C3AFF" strokeWidth="2.5"
+          <polyline points={polyline} fill="none" stroke="#00C27A" strokeWidth="2.5"
             strokeLinecap="round" strokeLinejoin="round" />
           {pts.map((p, i) => (
-            <circle key={i} cx={p.x} cy={p.y} r="4" fill="#6C3AFF" stroke="var(--card)" strokeWidth="1.5" />
+            <circle key={i} cx={p.x} cy={p.y} r="4" fill="#00C27A" stroke="var(--card)" strokeWidth="1.5" />
           ))}
           {/* Labels: first and last */}
           <text x={pts[0].x} y={H - 0} fontSize="8" fill="var(--text2)" textAnchor="middle">{logs[0].weight}kg</text>
-          <text x={pts[n-1].x} y={H - 0} fontSize="8" fill="#6C3AFF" textAnchor="middle" fontWeight="bold">{logs[n-1].weight}kg</text>
+          <text x={pts[n-1].x} y={H - 0} fontSize="8" fill="#00C27A" textAnchor="middle" fontWeight="bold">{logs[n-1].weight}kg</text>
         </svg>
       ) : (
         <div className="evo-single-note">Apenas 1 registro · complete mais treinos para ver a evolução</div>
@@ -587,7 +587,7 @@ function WeeklyPlanView({ plan, userId, todayIdx, onStartWorkout }) {
       <div className="weekly-days">
         {DAY_LABELS.map((label, i) => {
           const planDay  = plan.days[i % plan.days.length];
-          const catInfo  = CAT_INFO[planDay?.category] || { color: '#6C3AFF', label: '—' };
+          const catInfo  = CAT_INFO[planDay?.category] || { color: '#00C27A', label: '—' };
           const done     = completedDays.has(i);
           const isToday  = i === todayIdx;
           const isFuture = i > todayIdx;

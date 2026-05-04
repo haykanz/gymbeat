@@ -1,19 +1,19 @@
-// ── Sistema de categorias unificado ─────────────────────────────────────────
+﻿// ── Sistema de categorias unificado ─────────────────────────────────────────
 // Single accent color — premium, sem arco-íris, sem emojis
 
 export const CATEGORY_LABELS = {
-  abs:         { label: 'Abdômen',       color: '#6C3AFF' },
-  chest:       { label: 'Peito',         color: '#6C3AFF' },
-  back:        { label: 'Costas',        color: '#6C3AFF' },
-  shoulders:   { label: 'Ombros',        color: '#6C3AFF' },
-  arms:        { label: 'Braços',        color: '#6C3AFF' },
-  legs:        { label: 'Pernas',        color: '#6C3AFF' },
-  glutes:      { label: 'Glúteos',       color: '#6C3AFF' },
+  abs:         { label: 'Abdômen',       color: '#00C27A' },
+  chest:       { label: 'Peito',         color: '#00C27A' },
+  back:        { label: 'Costas',        color: '#00C27A' },
+  shoulders:   { label: 'Ombros',        color: '#00C27A' },
+  arms:        { label: 'Braços',        color: '#00C27A' },
+  legs:        { label: 'Pernas',        color: '#00C27A' },
+  glutes:      { label: 'Glúteos',       color: '#00C27A' },
   cardio:      { label: 'Cardio',        color: '#C9A84C' },
-  strength:    { label: 'Força',         color: '#6C3AFF' },
+  strength:    { label: 'Força',         color: '#00C27A' },
   hiit:        { label: 'HIIT',          color: '#C9A84C' },
-  flexibility: { label: 'Flexibilidade', color: '#6C3AFF' },
-  adapted:     { label: 'Adaptado',      color: '#6C3AFF' },
+  flexibility: { label: 'Flexibilidade', color: '#00C27A' },
+  adapted:     { label: 'Adaptado',      color: '#00C27A' },
 };
 
 // Tradução simples (sem cor) para exibição em texto puro
@@ -34,13 +34,13 @@ export const CAT_PT = {
 
 // ── Equipamentos ─────────────────────────────────────────────────────────────
 export const EQUIPMENT_FILTERS = {
-  all:     { label: 'Todos',    color: '#6C3AFF', match: null },
-  free:    { label: 'Sem Peso', color: '#6C3AFF', match: ['peso_corporal','banco','paralelas','barra_fixa'] },
-  dumbell: { label: 'Haltere',  color: '#6C3AFF', match: ['haltere','kettlebell'] },
-  barbell: { label: 'Barra',    color: '#6C3AFF', match: ['barra','smith'] },
-  machine: { label: 'Máquina',  color: '#6C3AFF', match: ['maquina'] },
-  cable:   { label: 'Cabo',     color: '#6C3AFF', match: ['cabo'] },
-  other:   { label: 'Outros',   color: '#6C3AFF', match: ['elastico','roda_abdominal','kettlebell','bola','faixa'] },
+  all:     { label: 'Todos',    color: '#00C27A', match: null },
+  free:    { label: 'Sem Peso', color: '#00C27A', match: ['peso_corporal','banco','paralelas','barra_fixa'] },
+  dumbell: { label: 'Haltere',  color: '#00C27A', match: ['haltere','kettlebell'] },
+  barbell: { label: 'Barra',    color: '#00C27A', match: ['barra','smith'] },
+  machine: { label: 'Máquina',  color: '#00C27A', match: ['maquina'] },
+  cable:   { label: 'Cabo',     color: '#00C27A', match: ['cabo'] },
+  other:   { label: 'Outros',   color: '#00C27A', match: ['elastico','roda_abdominal','kettlebell','bola','faixa'] },
 };
 
 export const EQ_BADGE = {

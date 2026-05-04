@@ -1,4 +1,4 @@
-// ── Modal de detalhes do exercício ───────────────────────────────────────────
+﻿// ── Modal de detalhes do exercício ───────────────────────────────────────────
 import { CATEGORY_LABELS, EQ_BADGE as EQ_BADGE_MAP } from '../data/categories';
 const EQ_LABELS = Object.fromEntries(Object.entries(EQ_BADGE_MAP).map(([k, v]) => [k, { label: v }]));
 
@@ -11,7 +11,7 @@ const DIFFICULTY = (bpmMax) => {
 export default function ExerciseDetailModal({ ex, onClose, onAction, actionLabel }) {
   if (!ex) return null;
 
-  const catInfo  = CATEGORY_LABELS[ex.category] || { label: ex.category || '—', color: '#6C3AFF' };
+  const catInfo  = CATEGORY_LABELS[ex.category] || { label: ex.category || '—', color: '#00C27A' };
   const eqInfo   = EQ_LABELS[ex.equipment] || null;
   const diff     = DIFFICULTY(ex.bpmMax || 120);
 

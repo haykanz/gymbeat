@@ -1,41 +1,42 @@
-/* ─── Reset & Base ─── */
+﻿/* ─── Reset & Base ─── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --primary: #6C3AFF;
-  --primary-light: #8B5CF6;
-  --primary-dim: rgba(108,58,255,0.12);
-  --gold: #C9A84C;
-  --gold-dim: rgba(201,168,76,0.12);
-  --accent: #FF6B35;
-  --success: #10B981;
+  /* ── Accent: verde performance ── */
+  --primary: #00C27A;
+  --primary-light: #00D88A;
+  --primary-dim: rgba(0,194,122,0.12);
+  --gold: #F59E0B;
+  --gold-dim: rgba(245,158,11,0.12);
+  --accent: #00C27A;
+  --success: #00C27A;
   --danger: #EF4444;
   --info: #06B6D4;
-  /* Dark theme (padrão) */
-  --bg: #06060F;
-  --bg2: #0C0C1A;
-  --bg3: #121224;
-  --card: #0E0E1E;
-  --border: #1A1A30;
-  --text: #E8E8F5;
-  --text2: #5C5C80;
-  --text3: #363660;
+  /* ── Dark theme — escuro militar ── */
+  --bg: #080D08;
+  --bg2: #0D140D;
+  --bg3: #131C13;
+  --card: #101810;
+  --border: #1C271C;
+  --text: #E4F0E8;
+  --text2: #527A5F;
+  --text3: #2E4A38;
   --radius: 12px;
   --radius-sm: 8px;
-  --shadow: 0 2px 20px rgba(0,0,0,0.6);
+  --shadow: 0 2px 20px rgba(0,0,0,0.7);
 }
 
 /* ─── Tema Claro ─── */
 [data-theme="light"] {
-  --bg: #F8F8FF;
-  --bg2: #F0F0FA;
-  --bg3: #E8E8F4;
+  --bg: #F4FAF6;
+  --bg2: #EAF4EE;
+  --bg3: #DDEEE4;
   --card: #FFFFFF;
-  --border: #E0E0EE;
-  --text: #0C0C1A;
-  --text2: #6060A0;
-  --text3: #A0A0C0;
-  --shadow: 0 2px 20px rgba(108,58,255,0.08);
+  --border: #C8E0D0;
+  --text: #0A180D;
+  --text2: #4A7A5A;
+  --text3: #8AAA98;
+  --shadow: 0 2px 20px rgba(0,194,122,0.10);
 }
 [data-theme="light"] body { background: var(--bg); }
 
@@ -123,7 +124,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: radial-gradient(ellipse at top, #1a0a3a 0%, var(--bg) 70%);
+  background: radial-gradient(ellipse at top, #0a1a0e 0%, var(--bg) 70%);
   padding: 20px;
 }
 
@@ -174,7 +175,7 @@ body {
 /* ─── QUESTIONNAIRE ─── */
 .questionnaire-page {
   min-height: 100vh;
-  background: radial-gradient(ellipse at top, #0d1a3a 0%, var(--bg) 70%);
+  background: radial-gradient(ellipse at top, #071208 0%, var(--bg) 70%);
   display: flex;
   flex-direction: column;
   padding: 20px;
@@ -354,7 +355,7 @@ body {
 .rest-card { margin: 0 16px; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; text-align: center; }
 .rest-card p { font-size: 16px; font-weight: 600; }
 .rest-sub { font-size: 13px; color: var(--text2); margin-top: 6px; }
-.set-rest { border-color: var(--primary); background: rgba(108,58,255,0.1); }
+.set-rest { border-color: var(--primary); background: var(--primary-dim); }
 
 .music-player { margin: 16px; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; margin-top: auto; }
 .music-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
@@ -373,7 +374,7 @@ body {
 .progress-fill { height: 100%; border-radius: 2px; transition: width 1s linear; }
 
 /* ─── COMPLETION ─── */
-.completion-screen { min-height: 100vh; background: radial-gradient(ellipse at top, #1a0a3a 0%, var(--bg) 70%); display: flex; align-items: center; justify-content: center; padding: 20px; }
+.completion-screen { min-height: 100vh; background: radial-gradient(ellipse at top, #0a1a0e 0%, var(--bg) 70%); display: flex; align-items: center; justify-content: center; padding: 20px; }
 .completion-content { background: var(--card); border: 1px solid var(--border); border-radius: 24px; padding: 40px; text-align: center; max-width: 400px; width: 100%; display: flex; flex-direction: column; gap: 20px; }
 .completion-emoji { font-size: 64px; }
 .completion-content h2 { font-size: 28px; font-weight: 800; }
@@ -556,7 +557,7 @@ body {
 /* ─── QUESTIONÁRIO — Saúde ─── */
 .quest-health-note {
   display: flex; align-items: center; gap: 10px;
-  background: rgba(108,58,255,0.08); border: 1px solid var(--border);
+  background: var(--primary-dim); border: 1px solid var(--border);
   border-radius: var(--radius-sm); padding: 10px 14px;
   margin-top: 12px; font-size: 12px; color: var(--text2);
 }
@@ -590,7 +591,7 @@ body {
 .music-sync-label { font-size: 11px; color: var(--text3); font-style: italic; margin-top: 2px; }
 
 /* ─── TELA AVISO DE SAÚDE ─── */
-.health-warning-screen { min-height: 100vh; background: radial-gradient(ellipse at top, #0d1a2a 0%, var(--bg) 70%); display: flex; align-items: center; justify-content: center; padding: 20px; }
+.health-warning-screen { min-height: 100vh; background: radial-gradient(ellipse at top, #071208 0%, var(--bg) 70%); display: flex; align-items: center; justify-content: center; padding: 20px; }
 .hw-content { background: var(--card); border: 1px solid var(--border); border-radius: 24px; padding: 32px; max-width: 440px; width: 100%; display: flex; flex-direction: column; align-items: center; gap: 18px; }
 .hw-icon-bar { width: 40px; height: 4px; border-radius: 2px; background: var(--primary); margin: 0 auto 16px; }
 .hw-content h2 { font-size: 24px; font-weight: 800; text-align: center; }
@@ -631,7 +632,7 @@ body {
 }
 .action-btn:hover { background: var(--border); color: var(--text); }
 .action-icon { font-size: 20px; }
-.action-swap:hover { border-color: #8B5CF6; color: #8B5CF6; }
+.action-swap:hover { border-color: var(--primary-light); color: var(--primary-light); }
 .action-skip { border-color: #EF444440; }
 .action-skip:hover { background: rgba(239,68,68,0.15); border-color: #EF4444; color: #EF4444; }
 
@@ -997,7 +998,7 @@ body {
 .ach-count { font-size: 48px; font-weight: 900; color: var(--primary); line-height: 1; }
 .ach-total { font-size: 18px; color: var(--text2); }
 .ach-bar-wrap { background: var(--bg3); border-radius: 8px; height: 10px; overflow: hidden; margin-bottom: 8px; }
-.ach-bar-fill { height: 100%; background: linear-gradient(90deg, var(--primary), #EC4899); border-radius: 8px; transition: width 0.6s ease; }
+.ach-bar-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--primary-light)); border-radius: 8px; transition: width 0.6s ease; }
 .ach-pct { font-size: 13px; color: var(--text2); }
 
 .ach-section { padding: 0 16px 8px; }
@@ -1059,7 +1060,7 @@ body {
 
 /* Conquistas na tela de conclusão */
 .comp-achievements {
-  background: linear-gradient(135deg, #F59E0B22, #6C3AFF22);
+  background: linear-gradient(135deg, #F59E0B18, rgba(0,194,122,0.12));
   border: 1px solid #F59E0B55;
   border-radius: var(--radius);
   padding: 16px;
