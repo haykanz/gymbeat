@@ -324,8 +324,8 @@ body {
 .session-title p { font-size: 14px; font-weight: 700; }
 .session-elapsed { font-size: 12px; color: var(--text2); }
 
-.phase-banner { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 12px; border-left: 3px solid; margin: 0; }
-.phase-icon { font-size: 22px; }
+.phase-banner { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 10px 16px; border-left: 3px solid; margin: 0; }
+.phase-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
 .phase-label { font-size: 14px; font-weight: 800; letter-spacing: 1px; }
 
 .timer-section { display: flex; justify-content: center; padding: 24px 20px 16px; }
@@ -592,7 +592,7 @@ body {
 /* ─── TELA AVISO DE SAÚDE ─── */
 .health-warning-screen { min-height: 100vh; background: radial-gradient(ellipse at top, #0d1a2a 0%, var(--bg) 70%); display: flex; align-items: center; justify-content: center; padding: 20px; }
 .hw-content { background: var(--card); border: 1px solid var(--border); border-radius: 24px; padding: 32px; max-width: 440px; width: 100%; display: flex; flex-direction: column; align-items: center; gap: 18px; }
-.hw-icon { font-size: 52px; }
+.hw-icon-bar { width: 40px; height: 4px; border-radius: 2px; background: var(--primary); margin: 0 auto 16px; }
 .hw-content h2 { font-size: 24px; font-weight: 800; text-align: center; }
 .hw-sub { font-size: 14px; color: var(--text2); text-align: center; }
 .hw-conditions { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
@@ -1067,7 +1067,12 @@ body {
 }
 .comp-ach-title { font-size: 15px; font-weight: 800; color: #F59E0B; margin-bottom: 12px; text-align: center; }
 .comp-ach-item { display: flex; align-items: center; gap: 12px; padding: 8px 0; border-top: 1px solid #F59E0B22; }
-.comp-ach-emoji { font-size: 28px; }
+.comp-ach-badge {
+  width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
+  background: var(--primary-dim); border: 1.5px solid var(--primary);
+  color: var(--primary); font-size: 15px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+}
 .comp-ach-name { font-size: 14px; font-weight: 700; }
 .comp-ach-desc { font-size: 12px; color: var(--text2); }
 

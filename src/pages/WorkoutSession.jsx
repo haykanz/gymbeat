@@ -322,10 +322,10 @@ export default function WorkoutSession({ workout, userProfile, userId, onFinish 
 
   // ── Config visual da fase ──────────────────────────────────────────────
   const phaseConfig = {
-    [PHASES.WARMUP]:  { label: 'AQUECIMENTO',       color: '#F59E0B', bg: '#FEF3C722', icon: '🔥' },
-    [PHASES.EXERCISE]:{ label: 'EXERCÍCIO',          color: genreInfo.color, bg: genreInfo.color + '18', icon: currentEx?.gif || '💪' },
-    [PHASES.REST]:    { label: 'DESCANSO',           color: '#06B6D4', bg: '#06B6D418', icon: '😮‍💨' },
-    [PHASES.SETREST]: { label: 'PAUSA ENTRE SÉRIES', color: '#8B5CF6', bg: '#8B5CF618', icon: '⏸️' },
+    [PHASES.WARMUP]:  { label: 'AQUECIMENTO',       color: '#F59E0B', bg: '#F59E0B10' },
+    [PHASES.EXERCISE]:{ label: 'EXERCÍCIO',          color: genreInfo.color, bg: genreInfo.color + '14' },
+    [PHASES.REST]:    { label: 'DESCANSO',           color: '#06B6D4', bg: '#06B6D410' },
+    [PHASES.SETREST]: { label: 'PAUSA ENTRE SÉRIES', color: '#8B5CF6', bg: '#8B5CF610' },
   };
   const pc = phaseConfig[phase];
   const totalDuration =
@@ -384,7 +384,7 @@ export default function WorkoutSession({ workout, userProfile, userId, onFinish 
         <button className="btn-icon" onClick={() => { clearInterval(intervalRef.current); onFinish(); }} title="Sair">✕</button>
         <div className="session-title">
           <p className="session-day">{workout.day} — Série {currentSet}/{sets}</p>
-          <p className="session-elapsed">⏱ {formatDuration(totalElapsed)} · 🔥 {totalCalories} cal</p>
+          <p className="session-elapsed">{formatDuration(totalElapsed)} · {totalCalories} kcal</p>
         </div>
         <button className="btn-icon session-list-btn" onClick={() => setShowPanel(true)} title="Ver exercícios">☰</button>
       </header>
@@ -411,10 +411,10 @@ export default function WorkoutSession({ workout, userProfile, userId, onFinish 
 
       {/* ── FASE BANNER ── */}
       <div className="phase-banner" style={{ backgroundColor: pc.bg, borderColor: pc.color }}>
-        <span className="phase-icon">{pc.icon}</span>
+        <span className="phase-dot" style={{ background: pc.color }} />
         <span className="phase-label" style={{ color: pc.color }}>{pc.label}</span>
         {activeConditions.length > 0 && (
-          <span className="adapted-badge">{activeConditions.map(c => c.emoji).join('')} Adaptado</span>
+          <span className="adapted-badge">Adaptado</span>
         )}
       </div>
 
@@ -444,7 +444,7 @@ export default function WorkoutSession({ workout, userProfile, userId, onFinish 
       {phase === PHASES.EXERCISE && (
         <div className="action-bar">
           <button className="action-btn action-swap" onClick={() => { setIsPlaying(false); setShowPicker(true); }}>
-            <span className="action-icon">🔄</span>
+            <span className="action-icon">↻</span>
             <span>Trocar</span>
           </button>
           <button className="action-btn action-pause" onClick={() => setIsPlaying(p => !p)}>
@@ -524,7 +524,7 @@ export default function WorkoutSession({ workout, userProfile, userId, onFinish 
                 onClick={handleLogLoad}
                 style={{ backgroundColor: logSaved ? '#10B981' : genreInfo.color }}
               >
-                {logSaved ? '✓' : '💾'}
+                {logSaved ? '✓' : 'Log'}
               </button>
             </div>
             {currentLog && (
@@ -542,7 +542,7 @@ export default function WorkoutSession({ workout, userProfile, userId, onFinish 
           <div className="rest-next">
             <span className="rest-next-label">A SEGUIR:</span>
             <p className="rest-next-name">
-              {exercises[currentExIdx + 1]?.name || (currentSet < sets ? '🔁 Nova Série' : '🏁 Treino completo!')}
+              {exercises[currentExIdx + 1]?.name || (currentSet < sets ? 'Nova Série' : 'Treino completo!')}
             </p>
             {exercises[currentExIdx + 1] && (
               <p className="rest-sub">{exercises[currentExIdx + 1]?.description}</p>
@@ -610,7 +610,7 @@ export default function WorkoutSession({ workout, userProfile, userId, onFinish 
         {currentTrack && (
           <>
             <div className="music-track-info">
-              <div className={`music-disc ${isPlaying ? 'spinning' : ''}`} style={{ borderColor: genreInfo.color }}>🎵</div>
+              <div className={`music-disc ${isPlaying ? 'spinning' : ''}`} style={{ borderColor: genreInfo.color, background: genreInfo.color + '22' }} />
               <div className="music-meta">
                 <p className="music-title">{currentTrack.title}</p>
                 <p className="music-artist">{currentTrack.artist}</p>
@@ -878,7 +878,7 @@ function HealthWarningScreen({ warnings, conditions, onContinue, onBack }) {
   return (
     <div className="health-warning-screen">
       <div className="hw-content">
-        <div className="hw-icon">🏥</div>
+        <div className="hw-icon-bar" />
         <h2>Treino Adaptado para Você</h2>
         <p className="hw-sub">Identificamos as seguintes condições no seu perfil:</p>
         <div className="hw-conditions">
@@ -974,7 +974,7 @@ function CompletionScreen({ workout, totalCalories, elapsed, completedExs, setLo
 
         {setLogs.length > 0 && (
           <div className="comp-logs">
-            <h4>📊 Cargas Registradas</h4>
+            <h4>Cargas Registradas</h4>
             <div className="comp-logs-list">
               {setLogs.map((log, i) => (
                 <div key={i} className="comp-log-item">
@@ -1002,10 +1002,10 @@ function CompletionScreen({ workout, totalCalories, elapsed, completedExs, setLo
         {/* Conquistas desbloqueadas */}
         {newAchs.length > 0 && (
           <div className="comp-achievements">
-            <p className="comp-ach-title">🏅 Conquista{newAchs.length > 1 ? 's' : ''} Desbloqueada{newAchs.length > 1 ? 's' : ''}!</p>
+            <p className="comp-ach-title">Conquista{newAchs.length > 1 ? 's' : ''} Desbloqueada{newAchs.length > 1 ? 's' : ''}!</p>
             {newAchs.map(a => (
               <div key={a.id} className="comp-ach-item">
-                <span className="comp-ach-emoji">{a.emoji}</span>
+                <span className="comp-ach-badge">{a.title.charAt(0)}</span>
                 <div>
                   <p className="comp-ach-name">{a.title}</p>
                   <p className="comp-ach-desc">{a.desc}</p>
@@ -1017,7 +1017,7 @@ function CompletionScreen({ workout, totalCalories, elapsed, completedExs, setLo
 
         {/* Compartilhar */}
         <button className={`share-btn ${copied ? 'share-btn-copied' : ''}`} onClick={handleShare}>
-          {copied ? '✅ Copiado!' : '📤 Compartilhar Treino'}
+          {copied ? '✓ Copiado!' : 'Compartilhar Treino'}
         </button>
 
         <button className="btn-primary btn-full" onClick={onFinish}>Voltar ao Início</button>
